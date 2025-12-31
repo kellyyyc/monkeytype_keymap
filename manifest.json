@@ -1,0 +1,19 @@
+{
+  "name": "Monkeytype Keymap+",
+  "description": "Customise the on-screen keyboard",
+  "version": "1.0",
+  "manifest_version": 3,
+  "permissions": ["storage"],
+  "content_scripts": [
+    {
+      "matches": ["https://*.monkeytype.com/*"],
+      "js": ["content_script.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  }
+}
