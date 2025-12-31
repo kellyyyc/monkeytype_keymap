@@ -105,6 +105,7 @@ window.addEventListener("load", () => {
 
   document.getElementById("reset-button").addEventListener("click", () => {
     for (const key of ALL_KEYS) {
+      key_mappings[key] = { text_color: "#d1d0c5", bg_color: "#2c2e31" };
     }
 
     render_keyboard_elem(key_mappings);
@@ -116,7 +117,6 @@ window.addEventListener("load", () => {
         const key = row[i];
 
         const color = get_rainbow_color(i);
-        console.log(color);
         key_mappings[key] = { text_color: "#000000", bg_color: color };
       }
     });
