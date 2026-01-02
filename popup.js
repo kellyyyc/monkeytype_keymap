@@ -45,6 +45,7 @@ const KEYBOARD_LAYOUT = [
 const styles = getComputedStyle(document.documentElement);
 
 const cssVars = {
+  backgroundColor: "--background-color",
   mainColor: "--main-color",
   subAltColor: "--sub-alt-color",
   subColor: "--sub-color",
@@ -65,9 +66,40 @@ window.addEventListener("load", () => {
   }
 
   chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
-    isEnabled = result["keymap_enabled"] ?? false;
     keyMappings = result["keymap_keys"] ?? {};
     renderKeyboardElem(keyMappings);
+
+    isEnabled = result["keymap_enabled"] ?? false;
+    const keyboardContainerElem = document.getElementById("keyboard-container");
+    const toggleOnElem = document.getElementById("toggle-on");
+    const toggleOffElem = document.getElementById("toggle-off");
+    if (isEnabled) {
+      toggleOnElem.classList.add("active");
+      keyboardContainerElem.classList.remove("disabled");
+    } else {
+      toggleOffElem.classList.add("active");
+      keyboardContainerElem.classList.add("disabled");
+    }
+
+    toggleOnElem.addEventListener("click", () => {
+      isEnabled = true;
+      toggleOffElem.classList.remove("active");
+      toggleOnElem.classList.add("active");
+      keyboardContainerElem.classList.remove("disabled");
+
+      chrome.storage.sync.set({ keymap_enabled: true });
+    });
+
+    toggleOffElem.addEventListener("click", () => {
+      isEnabled = false;
+      toggleOnElem.classList.remove("active");
+      toggleOffElem.classList.add("active");
+      keyboardContainerElem.classList.add("disabled");
+
+      deselectAllKeys();
+
+      chrome.storage.sync.set({ keymap_enabled: false });
+    });
 
     document.getElementById("save-button").addEventListener("click", () => {
       chrome.storage.sync.set({ keymap_keys: keyMappings });
@@ -75,28 +107,24 @@ window.addEventListener("load", () => {
   });
 
   document.getElementById("select-button").addEventListener("click", () => {
-    for (const key in selected) {
-      selected[key] = true;
+    if (!isEnabled) {
+      return;
     }
 
-    for (let elem of document.getElementsByClassName("key")) {
-      elem.style.borderColor = colors.mainColor;
-    }
+    selectAllKeys();
   });
 
   document.getElementById("deselect-button").addEventListener("click", () => {
-    for (const key in selected) {
-      selected[key] = false;
+    if (!isEnabled) {
+      return;
     }
 
-    for (let elem of document.getElementsByClassName("key")) {
-      elem.style.borderColor = colors.subAltColor;
-    }
+    deselectAllKeys();
   });
 
-  const tectColorPickerElem = document.getElementById("text-color-picker");
-  tectColorPickerElem.addEventListener("input", () => {
-    const selectedColor = tectColorPickerElem.value;
+  const textColorPickerElem = document.getElementById("text-color-picker");
+  textColorPickerElem.addEventListener("input", () => {
+    const selectedColor = textColorPickerElem.value;
 
     for (const [key, isSelected] of Object.entries(selected)) {
       if (isSelected) {
@@ -121,6 +149,10 @@ window.addEventListener("load", () => {
   });
 
   document.getElementById("reset-button").addEventListener("click", () => {
+    if (!isEnabled) {
+      return;
+    }
+
     for (const key of ALL_KEYS) {
       keyMappings[key] = {
         text_color: colors.subColor,
@@ -132,6 +164,10 @@ window.addEventListener("load", () => {
   });
 
   document.getElementById("rainbow-button").addEventListener("click", () => {
+    if (!isEnabled) {
+      return;
+    }
+
     KEYBOARD_LAYOUT.forEach((row) => {
       for (const i in row) {
         const key = row[i];
@@ -140,7 +176,6 @@ window.addEventListener("load", () => {
         keyMappings[key] = { text_color: "#000000", bg_color: color };
       }
     });
-
     keyMappings["spacebar"] = {
       text_color: "#000000",
       bg_color: getRainbowColor(-1),
@@ -149,6 +184,26 @@ window.addEventListener("load", () => {
     renderKeyboardElem(keyMappings);
   });
 });
+
+const selectAllKeys = () => {
+  for (const key in selected) {
+    selected[key] = true;
+  }
+
+  for (let elem of document.getElementsByClassName("key")) {
+    elem.style.borderColor = colors.mainColor;
+  }
+};
+
+const deselectAllKeys = () => {
+  for (const key in selected) {
+    selected[key] = false;
+  }
+
+  for (let elem of document.getElementsByClassName("key")) {
+    elem.style.borderColor = colors.backgroundColor;
+  }
+};
 
 const renderKeyboardElem = (colorsArr) => {
   const keyboardElem = document.getElementById("keyboard-container");
@@ -180,11 +235,15 @@ const createKeyElem = (key, textColor, bgColor) => {
   keyElem.className = "key";
   keyElem.setAttribute("data-key", key);
   keyElem.style.backgroundColor = bgColor;
-  keyElem.style.borderColor = selected[key] ? colors.mainColor : bgColor;
+  keyElem.style.borderColor = selected[key]
+    ? colors.mainColor
+    : colors.backgroundColor;
 
   keyElem.addEventListener("click", () => {
     selected[key] = !selected[key];
-    keyElem.style.borderColor = selected[key] ? colors.mainColor : bgColor;
+    keyElem.style.borderColor = selected[key]
+      ? colors.mainColor
+      : colors.backgroundColor;
   });
 
   const letterElem = document.createElement("div");
