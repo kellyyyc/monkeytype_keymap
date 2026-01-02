@@ -80,7 +80,7 @@ window.addEventListener("load", () => {
     }
 
     for (let elem of document.getElementsByClassName("key")) {
-      elem.style.border = `2px solid ${colors.mainColor}`;
+      elem.style.borderColor = colors.mainColor;
     }
   });
 
@@ -90,12 +90,13 @@ window.addEventListener("load", () => {
     }
 
     for (let elem of document.getElementsByClassName("key")) {
-      elem.style.border = `2px solid ${colors.subAltColor}`;
+      elem.style.borderColor = colors.subAltColor;
     }
   });
 
-  document.getElementById("text-color-picker").addEventListener("input", () => {
-    const selectedColor = document.getElementById("text-color-picker").value;
+  const tectColorPickerElem = document.getElementById("text-color-picker");
+  tectColorPickerElem.addEventListener("input", () => {
+    const selectedColor = tectColorPickerElem.value;
 
     for (const [key, isSelected] of Object.entries(selected)) {
       if (isSelected) {
@@ -106,8 +107,9 @@ window.addEventListener("load", () => {
     renderKeyboardElem(keyMappings);
   });
 
-  document.getElementById("bg-color-picker").addEventListener("input", () => {
-    const selectedColor = document.getElementById("bg-color-picker").value;
+  const bgColorPickerElem = document.getElementById("bg-color-picker");
+  bgColorPickerElem.addEventListener("input", () => {
+    const selectedColor = bgColorPickerElem.value;
 
     for (const [key, isSelected] of Object.entries(selected)) {
       if (isSelected) {
@@ -178,11 +180,11 @@ const createKeyElem = (key, textColor, bgColor) => {
   keyElem.className = "key";
   keyElem.setAttribute("data-key", key);
   keyElem.style.backgroundColor = bgColor;
-  keyElem.style.border = getBorderColor(key, bgColor);
+  keyElem.style.borderColor = selected[key] ? colors.mainColor : bgColor;
 
   keyElem.addEventListener("click", () => {
     selected[key] = !selected[key];
-    keyElem.style.border = getBorderColor(key, bgColor);
+    keyElem.style.borderColor = selected[key] ? colors.mainColor : bgColor;
   });
 
   const letterElem = document.createElement("div");
@@ -193,11 +195,6 @@ const createKeyElem = (key, textColor, bgColor) => {
   keyElem.appendChild(letterElem);
 
   return keyElem;
-};
-
-const getBorderColor = (key, bgColor) => {
-  const color = selected[key] ? colors.mainColor : bgColor;
-  return `2px solid ${color}`;
 };
 
 const getRainbowColor = (idx) => {
