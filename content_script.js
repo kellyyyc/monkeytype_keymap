@@ -36,40 +36,40 @@ const ALL_KEYS = [
   "spacebar",
 ];
 
-let key_colors = null;
+let keyColors = null;
 
 chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
-  is_enabled = result["keymap_enabled"];
-  key_colors = result["keymap_keys"] ?? {};
+  const isEnabled = result["keymap_enabled"];
+  keyColors = result["keymap_keys"] ?? {};
 
-  if (is_enabled) {
+  if (isEnabled) {
     const id = setInterval(() => {
-      if (start_observer(key_colors)) {
+      if (startObserver(keyColors)) {
         clearInterval(id);
       }
     }, 100);
   }
 });
 
-const start_observer = () => {
-  const keymap_elem = document.getElementById("keymap");
-  if (!keymap_elem) {
+const startObserver = () => {
+  const keymapElem = document.getElementById("keymap");
+  if (!keymapElem) {
     return false;
   }
 
-  const keys = keymap_elem.getElementsByClassName("keymapKey");
+  const keys = keymapElem.getElementsByClassName("keymapKey");
   if (keys.length === 0) {
     return false;
   }
 
-  observer.observe(keymap_elem, {
+  observer.observe(keymapElem, {
     subtree: true,
     attributes: true,
     attributeFilter: ["easing", "style"],
   });
 
   for (const key of keys) {
-    change_key_colour(key);
+    changeKeyColour(key);
   }
 
   return true;
@@ -85,16 +85,16 @@ const observer = new MutationObserver((mutations) => {
       continue;
     }
 
-    change_key_colour(elem);
+    changeKeyColour(elem);
   }
 });
 
-const change_key_colour = (key) => {
-  const data_key = key.getAttribute("data-key");
+const changeKeyColour = (key) => {
+  const dataKey = key.getAttribute("data-key");
   let color = null;
   let letter = null;
-  if (data_key) {
-    letter = data_key.slice(0, 1);
+  if (dataKey) {
+    letter = dataKey.slice(0, 1);
   } else if (
     key.classList.contains("keySpace") &&
     key.classList.contains("left")
@@ -108,10 +108,10 @@ const change_key_colour = (key) => {
     return;
   }
 
-  color = key_colors?.[letter];
+  color = keyColors?.[letter];
 
-  const key_style_delay = (num_frames) => {
-    if (num_frames <= 0) {
+  const keyStyleDelay = (numFrames) => {
+    if (numFrames <= 0) {
       if (key.style.backgroundColor !== color.bg_color) {
         key.style.backgroundColor = color.bg_color;
       }
@@ -123,10 +123,10 @@ const change_key_colour = (key) => {
       return;
     }
 
-    requestAnimationFrame(() => key_style_delay(num_frames - 1));
+    requestAnimationFrame(() => keyStyleDelay(numFrames - 1));
   };
 
   if (color) {
-    key_style_delay(FRAME_DELAY);
+    keyStyleDelay(FRAME_DELAY);
   }
 };

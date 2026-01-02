@@ -41,12 +41,12 @@ const DEFAULT_BG_COLOR = "#2c2e31";
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.set({ keymap_enabled: true });
 
-  const key_mappings = {};
+  const keyMappings = {};
   for (const key of ALL_KEYS) {
-    key_mappings[key] = {
+    keyMappings[key] = {
       text_color: DEFAULT_TEXT_COLOR,
       bg_color: DEFAULT_BG_COLOR,
     };
   }
-  chrome.storage.sync.set({ keymap_keys: key_mappings });
+  chrome.storage.sync.set({ keymap_keys: keyMappings });
 });
