@@ -2,13 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <script src="popup.js"></script>
     <link rel="stylesheet" href="styles.css" />
+    <script src="popup.js"></script>
   </head>
 
   <body>
     <h1>Monkeytype Keymap+</h1>
-
+    <div id="toggle-container">
+      <button class="toggle-buttons">off</button>
+      <button class="toggle-buttons active">on</button>
+    </div>
     <div id="keyboard-container"></div>
     <button id="select-button">select all</button>
     <button id="deselect-button">deselect all</button>

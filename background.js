@@ -35,10 +35,18 @@ const ALL_KEYS = [
   "spacebar",
 ];
 
+const DEFAULT_TEXT_COLOR = "#646669";
+const DEFAULT_BG_COLOR = "#2c2e31";
+
 chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.sync.set({ keymap_enabled: true });
+
   const key_mappings = {};
   for (const key of ALL_KEYS) {
-    key_mappings[key] = { text_color: "#d1d0c5", bg_color: "#2c2e31" };
+    key_mappings[key] = {
+      text_color: DEFAULT_TEXT_COLOR,
+      bg_color: DEFAULT_BG_COLOR,
+    };
   }
-  chrome.storage.sync.set({ monkeytype_keymap_keys: key_mappings });
+  chrome.storage.sync.set({ keymap_keys: key_mappings });
 });

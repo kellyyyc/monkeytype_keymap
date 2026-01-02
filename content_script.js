@@ -38,14 +38,17 @@ const ALL_KEYS = [
 
 let key_colors = null;
 
-chrome.storage.sync.get("monkeytype_keymap_keys").then((result) => {
-  key_colors = result["monkeytype_keymap_keys"] ?? {};
+chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
+  is_enabled = result["keymap_enabled"];
+  key_colors = result["keymap_keys"] ?? {};
 
-  const id = setInterval(() => {
-    if (start_observer(key_colors)) {
-      clearInterval(id);
-    }
-  }, 100);
+  if (is_enabled) {
+    const id = setInterval(() => {
+      if (start_observer(key_colors)) {
+        clearInterval(id);
+      }
+    }, 100);
+  }
 });
 
 const start_observer = () => {

@@ -42,20 +42,35 @@ const KEYBOARD_LAYOUT = [
   ["spacebar"],
 ];
 
+const styles = getComputedStyle(document.documentElement);
+
+const css_vars = {
+  main_color: "--main-color",
+  sub_alt_color: "--sub-alt-color",
+  text_color: "--text-color",
+};
+const colors = {};
+
+for (const [key, css_var] of Object.entries(css_vars)) {
+  colors[key] = styles.getPropertyValue(css_var).trim();
+}
+
 const selected = {};
 let key_mappings = {};
+let is_enabled = false;
 
 window.addEventListener("load", () => {
   for (const key of ALL_KEYS) {
     selected[key] = false;
   }
 
-  chrome.storage.sync.get(["monkeytype_keymap_keys"]).then((result) => {
-    key_mappings = result["monkeytype_keymap_keys"];
+  chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
+    is_enabled = result["keymap_enabled"] ?? false;
+    key_mappings = result["keymap_keys"] ?? {};
     render_keyboard_elem(key_mappings);
 
     document.getElementById("save-button").addEventListener("click", () => {
-      chrome.storage.sync.set({ monkeytype_keymap_keys: key_mappings });
+      chrome.storage.sync.set({ keymap_keys: key_mappings });
     });
   });
 
@@ -65,7 +80,7 @@ window.addEventListener("load", () => {
     }
 
     for (let elem of document.getElementsByClassName("key")) {
-      elem.style.border = "2px solid #e2b714";
+      elem.style.border = `2px solid ${colors.main_color}`;
     }
   });
 
@@ -75,15 +90,15 @@ window.addEventListener("load", () => {
     }
 
     for (let elem of document.getElementsByClassName("key")) {
-      elem.style.border = "2px solid #2c2e31";
+      elem.style.border = `2px solid ${colors.sub_alt_color}`;
     }
   });
 
   document.getElementById("text-color-picker").addEventListener("input", () => {
     const selected_color = document.getElementById("text-color-picker").value;
 
-    for (const key in selected) {
-      if (selected[key]) {
+    for (const [key, is_selected] of Object.entries(selected)) {
+      if (is_selected) {
         key_mappings[key].text_color = selected_color;
       }
     }
@@ -94,8 +109,8 @@ window.addEventListener("load", () => {
   document.getElementById("bg-color-picker").addEventListener("input", () => {
     const selected_color = document.getElementById("bg-color-picker").value;
 
-    for (const key in selected) {
-      if (selected[key]) {
+    for (const [key, is_selected] of Object.entries(selected)) {
+      if (is_selected) {
         key_mappings[key].bg_color = selected_color;
       }
     }
@@ -105,7 +120,10 @@ window.addEventListener("load", () => {
 
   document.getElementById("reset-button").addEventListener("click", () => {
     for (const key of ALL_KEYS) {
-      key_mappings[key] = { text_color: "#d1d0c5", bg_color: "#2c2e31" };
+      key_mappings[key] = {
+        text_color: colors.text_color,
+        bg_color: colors.sub_alt_color,
+      };
     }
 
     render_keyboard_elem(key_mappings);
@@ -178,7 +196,8 @@ const create_key_elem = (key, text_color, bg_color) => {
 };
 
 const get_border_color = (key, bg_color) => {
-  return selected[key] ? "2px solid #e2b714" : `2px solid ${bg_color}`;
+  const color = selected[key] ? colors.main_color : bg_color;
+  return `2px solid ${color}`;
 };
 
 const get_rainbow_color = (idx) => {
@@ -207,6 +226,6 @@ const get_rainbow_color = (idx) => {
       return "#eda1e9";
 
     default:
-      return "#2c2e31";
+      return colors.sub_alt_color;
   }
 };

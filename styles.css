@@ -16,15 +16,13 @@ body {
   color: var(--text-color);
 }
 
-h1 {
-  margin-bottom: 40px;
-}
-
 #keyboard-container {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-top: 20px;
 }
+
 .row {
   display: flex;
   flex-direction: row;
@@ -60,4 +58,19 @@ h1 {
   .letter {
     font-size: 15px;
   }
+}
+
+#toggle-container {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  color: var(--sub-color);
+}
+
+.toggle-buttons {
+  background-color: var(--sub-alt-color);
+  height: 32px;
+  width: 64px;
+  justify-content: center;
+  align-items: center;
 }
