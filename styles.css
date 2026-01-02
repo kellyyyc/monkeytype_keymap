@@ -9,11 +9,15 @@
 }
 
 body {
-  height: 400px;
-  width: 640px;
-  margin: 16px;
+  min-height: 400px;
+  min-width: 640px;
+  margin: 24px;
+
   background-color: var(--background-color);
-  color: var(--text-color);
+  color: var(--sub-color);
+
+  font-size: 15px;
+  font-weight: 500;
 }
 
 #keyboard-container {
@@ -36,41 +40,71 @@ body {
   width: 28px;
   align-items: center;
   justify-content: center;
-  background-color: var(--sub-alt-color);
-  border: 2px solid var(--sub-alt-color);
   border-radius: 10px;
   padding: 8px;
+  border: 2px solid var(--sub-alt-color);
+
+  background-color: var(--sub-alt-color);
+
   cursor: pointer;
-  &:hover .letter {
-    color: var(--main-color);
-  }
+}
+
+.key:hover .letter {
+  color: var(--main-color);
 }
 
 .letter {
-  color: var(--sub-color);
-  font-size: 20px;
   padding-bottom: 2px;
+
+  color: var(--sub-color);
+
+  font-size: 20px;
   font-weight: 500;
 }
 
 .spacebar {
   width: 164px;
-  .letter {
-    font-size: 15px;
-  }
+}
+
+.spacebar .letter {
+  font-size: 15px;
+}
+
+#title-container {
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 
 #toggle-container {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 8px;
-  color: var(--sub-color);
 }
 
-.toggle-buttons {
-  background-color: var(--sub-alt-color);
-  height: 32px;
-  width: 64px;
+.buttons {
+  all: unset;
+
+  display: flex;
   justify-content: center;
   align-items: center;
+  height: 32px;
+  width: 64px;
+  border-radius: 10px;
+
+  background-color: var(--sub-alt-color);
+  color: var(--text-color);
+}
+
+.buttons.active {
+  background-color: var(--main-color);
+  color: var(--background-color);
+}
+
+.buttons:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
 }
