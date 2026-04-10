@@ -1,49 +1,14 @@
 const BLACK = "#000000";
 const WHITE = "#FFFFFF";
 
-const ALL_KEYS = [
-  "q",
-  "w",
-  "e",
-  "r",
-  "t",
-  "y",
-  "u",
-  "i",
-  "o",
-  "p",
-  "[",
-  "]",
-  "a",
-  "s",
-  "d",
-  "f",
-  "g",
-  "h",
-  "j",
-  "k",
-  "l",
-  ";",
-  "'",
-  "z",
-  "x",
-  "c",
-  "v",
-  "b",
-  "n",
-  "m",
-  ",",
-  ".",
-  "/",
-  "spacebar",
-];
-
 const KEYBOARD_LAYOUT = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"],
   ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'"],
   ["z", "x", "c", "v", "b", "n", "m", ",", ".", "/"],
   ["spacebar"],
 ];
+
+const ALL_KEYS = KEYBOARD_LAYOUT.flat();
 
 const styles = getComputedStyle(document.documentElement);
 
@@ -193,9 +158,7 @@ window.addEventListener("load", () => {
     }
 
     KEYBOARD_LAYOUT.forEach((row) => {
-      for (const i in row) {
-        const key = row[i];
-
+      for (const [i, key] of row.entries()) {
         const color = getRainbowColor(i);
         keyMappings[key] = { text_color: BLACK, bg_color: color };
       }
