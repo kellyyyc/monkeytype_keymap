@@ -188,9 +188,9 @@ button {
   height: 32px;
 }
 
-/* .color-setting label {
+.color-setting label {
   margin-bottom: 2px;
-} */
+}
 
 .color-picker-wrapper {
   position: relative;
