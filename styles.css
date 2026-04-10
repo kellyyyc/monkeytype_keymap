@@ -183,18 +183,24 @@ button {
 .color-setting {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 10px;
+  height: 32px;
 }
+
+/* .color-setting label {
+  margin-bottom: 2px;
+} */
 
 .color-picker-wrapper {
   position: relative;
-  height: 36px;
-  width: 36px;
+  height: 32px;
+  width: 32px;
 }
 
 .color-picker {
-  height: 32px;
-  width: 32px;
+  height: 100%;
+  width: 100%;
   border: 0;
   border-radius: 9px;
   padding: 0;
