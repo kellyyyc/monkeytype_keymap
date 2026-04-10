@@ -44,7 +44,7 @@ chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
 
   if (isEnabled) {
     const id = setInterval(() => {
-      if (startObserver(keyColors)) {
+      if (startObserver()) {
         clearInterval(id);
       }
     }, 100);
