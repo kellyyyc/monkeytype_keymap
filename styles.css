@@ -93,7 +93,7 @@ button {
   justify-content: center;
   border-radius: 10px;
   padding: 8px;
-  border: 2px solid var(--sub-alt-color);
+  border: 2px solid var(--background-color);
 
   background-color: var(--sub-alt-color);
 
