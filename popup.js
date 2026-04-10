@@ -1,3 +1,6 @@
+const BLACK = "#000000";
+const WHITE = "#FFFFFF";
+
 const ALL_KEYS = [
   "q",
   "w",
@@ -127,8 +130,16 @@ window.addEventListener("load", () => {
     });
 
   const textColorPickerElem = document.getElementById("text-color-picker");
+  textColorPickerElem.value = colors.subColor;
+
+  const textColorPickerParent = textColorPickerElem.parentElement;
+  const textColorPickerIcon = textColorPickerParent.querySelector("svg");
+  textColorPickerIcon.style.color = colors.subColor;
+
   textColorPickerElem.addEventListener("input", () => {
     const selectedColor = textColorPickerElem.value;
+
+    textColorPickerIcon.style.color = selectedColor;
 
     for (const [key, isSelected] of Object.entries(selected)) {
       if (isSelected) {
@@ -140,8 +151,15 @@ window.addEventListener("load", () => {
   });
 
   const bgColorPickerElem = document.getElementById("bg-color-picker");
+  bgColorPickerElem.value = colors.subColor;
+
+  const bgColorPickerParent = bgColorPickerElem.parentElement;
+  bgColorPickerParent.style.backgroundColor = colors.subColor;
+
   bgColorPickerElem.addEventListener("input", () => {
     const selectedColor = bgColorPickerElem.value;
+
+    bgColorPickerParent.style.backgroundColor = selectedColor;
 
     for (const [key, isSelected] of Object.entries(selected)) {
       if (isSelected) {
@@ -179,11 +197,11 @@ window.addEventListener("load", () => {
         const key = row[i];
 
         const color = getRainbowColor(i);
-        keyMappings[key] = { text_color: "#000000", bg_color: color };
+        keyMappings[key] = { text_color: BLACK, bg_color: color };
       }
     });
     keyMappings["spacebar"] = {
-      text_color: "#000000",
+      text_color: BLACK,
       bg_color: getRainbowColor(-1),
     };
 
