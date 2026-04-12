@@ -1,42 +1,8 @@
-const ALL_KEYS = [
-  "q",
-  "w",
-  "e",
-  "r",
-  "t",
-  "y",
-  "u",
-  "i",
-  "o",
-  "p",
-  "[",
-  "]",
-  "a",
-  "s",
-  "d",
-  "f",
-  "g",
-  "h",
-  "j",
-  "k",
-  "l",
-  ";",
-  "'",
-  "z",
-  "x",
-  "c",
-  "v",
-  "b",
-  "n",
-  "m",
-  ",",
-  ".",
-  "/",
-  "spacebar",
-];
-
-const DEFAULT_TEXT_COLOR = "#646669";
-const DEFAULT_BG_COLOR = "#2c2e31";
+import {
+  ALL_KEYS,
+  DEFAULT_TEXT_COLOR,
+  DEFAULT_BG_COLOR,
+} from "./utils/constants.js";
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.set({ keymap_enabled: true });

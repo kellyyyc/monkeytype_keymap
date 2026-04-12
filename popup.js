@@ -1,14 +1,9 @@
-const BLACK = "#000000";
-const WHITE = "#FFFFFF";
-
-const KEYBOARD_LAYOUT = [
-  ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"],
-  ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'"],
-  ["z", "x", "c", "v", "b", "n", "m", ",", ".", "/"],
-  ["spacebar"],
-];
-
-const ALL_KEYS = KEYBOARD_LAYOUT.flat();
+import {
+  ALL_KEYS,
+  KEYBOARD_LAYOUT,
+  BLACK,
+  RAINBOW_COLORS,
+} from "./utils/constants.js";
 
 const styles = getComputedStyle(document.documentElement);
 
@@ -18,8 +13,8 @@ const cssVars = {
   subAltColor: "--sub-alt-color",
   subColor: "--sub-color",
 };
-const colors = {};
 
+const colors = {};
 for (const [key, cssVar] of Object.entries(cssVars)) {
   colors[key] = styles.getPropertyValue(cssVar).trim();
 }
@@ -244,31 +239,5 @@ const createKeyElem = (key, textColor, bgColor) => {
 };
 
 const getRainbowColor = (idx) => {
-  switch (parseInt(idx)) {
-    case -1:
-      return "#9b86ef";
-    case 0:
-      return "#f22d49";
-    case 1:
-      return "#efb30e";
-    case 2:
-      return "#6fd476";
-    case 3:
-    case 4:
-      return "#06b6f1";
-    case 5:
-    case 6:
-      return "#3890d7";
-    case 7:
-      return "#91e0ed";
-    case 8:
-      return "#ede568";
-    case 9:
-    case 10:
-    case 11:
-      return "#eda1e9";
-
-    default:
-      return colors.subAltColor;
-  }
+  return RAINBOW_COLORS[idx] ?? colors.subAltColor;
 };
