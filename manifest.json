@@ -6,7 +6,7 @@
   "permissions": ["storage"],
   "content_scripts": [
     {
-      "matches": ["https://*.monkeytype.com/*"],
+      "matches": ["https://monkeytype.com/*", "https://*.monkeytype.com/*"],
       "js": ["content_script.js"]
     }
   ],
