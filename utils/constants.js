@@ -7,8 +7,6 @@ export const KEYBOARD_LAYOUT = [
 
 export const ALL_KEYS = KEYBOARD_LAYOUT.flat();
 
-export const FRAME_DELAY = 5;
-
 // colors definitions
 export const BLACK = "#000000";
 export const WHITE = "#FFFFFF";

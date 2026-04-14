@@ -1,4 +1,4 @@
-import { FRAME_DELAY } from "./utils/constants.js";
+const FRAME_DELAY = 5;
 
 let keyColors = null;
 
