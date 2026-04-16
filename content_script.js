@@ -33,7 +33,21 @@ const startObserver = () => {
   });
 
   const typingTestElem = document.getElementById("typingTest");
-  typingTestObserver.observe(typingTestElem, {
+  if (!typingTestElem) {
+    return false;
+  }
+
+  testObserver.observe(typingTestElem, {
+    attributes: true,
+    attributeFilter: ["class"],
+  });
+
+  const pageTestElem = document.getElementsByClassName("pageTest")[0];
+  if (!pageTestElem) {
+    return false;
+  }
+
+  testObserver.observe(pageTestElem, {
     attributes: true,
     attributeFilter: ["class"],
   });
@@ -47,9 +61,6 @@ const startObserver = () => {
 
 const keyboardObserver = new MutationObserver((mutations) => {
   for (const mutation of mutations) {
-    if (mutation.type !== "attributes") {
-      continue;
-    }
     const elem = mutation.target;
     if (!elem.classList.contains("keymapKey")) {
       continue;
@@ -59,26 +70,19 @@ const keyboardObserver = new MutationObserver((mutations) => {
   }
 });
 
-const typingTestObserver = new MutationObserver((mutations) => {
-  for (const mutation of mutations) {
-    if (mutation.type !== "attributes") {
-      continue;
-    }
+const testObserver = new MutationObserver((mutations) => {
+  const keymapElem = document.getElementById("keymap");
+  if (!keymapElem) {
+    return;
+  }
 
-    const elem = mutation.target;
-    if (!elem.classList.contains("hidden")) {
-      const keymapElem = document.getElementById("keymap");
-      if (!keymapElem) {
-        continue;
-      }
-      const keys = keymapElem.getElementsByClassName("keymapKey");
-      if (keys.length === 0) {
-        continue;
-      }
-      for (const key of keys) {
-        changeKeyColour(key);
-      }
-    }
+  const keys = keymapElem.getElementsByClassName("keymapKey");
+  if (keys.length === 0) {
+    return;
+  }
+
+  for (const key of keys) {
+    changeKeyColour(key);
   }
 });
 
