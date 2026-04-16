@@ -67,6 +67,7 @@ const keyboardObserver = new MutationObserver((mutations) => {
     }
 
     changeKeyColour(elem);
+    break;
   }
 });
 
@@ -87,9 +88,9 @@ const testObserver = new MutationObserver((mutations) => {
 });
 
 const changeKeyColour = (key) => {
-  const dataKey = key.getAttribute("data-key");
-  let color = null;
   let letter = null;
+
+  const dataKey = key.getAttribute("data-key");
   if (dataKey) {
     letter = dataKey.slice(0, 1);
   } else if (
@@ -105,21 +106,24 @@ const changeKeyColour = (key) => {
     return;
   }
 
+  const color = keyColors?.[letter];
+  if (!color) {
+    return;
+  }
+
   if (key.classList.contains("activeKey")) {
     key.style.backgroundColor = "#ffffff";
     return;
   }
 
-  color = keyColors?.[letter];
+  if (key.style.color !== color.text_color) {
+    key.style.color = color.text_color;
+  }
 
   const keyStyleDelay = (numFrames) => {
     if (numFrames <= 0) {
       if (key.style.backgroundColor !== color.bg_color) {
         key.style.backgroundColor = color.bg_color;
-      }
-
-      if (key.style.color !== color.text_color) {
-        key.style.color = color.text_color;
       }
 
       return;
