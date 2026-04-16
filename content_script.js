@@ -20,12 +20,10 @@ const startObserver = () => {
   if (!keymapElem) {
     return false;
   }
-
   const keys = keymapElem.getElementsByClassName("keymapKey");
   if (keys.length === 0) {
     return false;
   }
-
   keyboardObserver.observe(keymapElem, {
     subtree: true,
     attributes: true,
@@ -36,7 +34,6 @@ const startObserver = () => {
   if (!typingTestElem) {
     return false;
   }
-
   testObserver.observe(typingTestElem, {
     attributes: true,
     attributeFilter: ["class"],
@@ -46,14 +43,13 @@ const startObserver = () => {
   if (!pageTestElem) {
     return false;
   }
-
   testObserver.observe(pageTestElem, {
     attributes: true,
     attributeFilter: ["class"],
   });
 
   for (const key of keys) {
-    changeKeyColour(key);
+    changeKeyColour(key, 0);
   }
 
   return true;
@@ -66,7 +62,7 @@ const keyboardObserver = new MutationObserver((mutations) => {
       continue;
     }
 
-    changeKeyColour(elem);
+    changeKeyColour(elem, FRAME_DELAY);
     break;
   }
 });
@@ -83,11 +79,11 @@ const testObserver = new MutationObserver((mutations) => {
   }
 
   for (const key of keys) {
-    changeKeyColour(key);
+    changeKeyColour(key, 0);
   }
 });
 
-const changeKeyColour = (key) => {
+const changeKeyColour = (key, delay) => {
   let letter = null;
 
   const dataKey = key.getAttribute("data-key");
@@ -101,7 +97,6 @@ const changeKeyColour = (key) => {
   } else {
     return;
   }
-
   if (!letter) {
     return;
   }
@@ -133,6 +128,6 @@ const changeKeyColour = (key) => {
   };
 
   if (color) {
-    keyStyleDelay(FRAME_DELAY);
+    keyStyleDelay(delay);
   }
 };
