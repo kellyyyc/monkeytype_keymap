@@ -5,14 +5,26 @@ import {
 } from "./utils/constants.js";
 
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({ keymap_enabled: true });
+  chrome.storage.sync.get(["keymap_enabled", "keymap_keys"], (result) => {
+    const updates = {};
 
-  const keyMappings = {};
-  for (const key of ALL_KEYS) {
-    keyMappings[key] = {
-      text_color: DEFAULT_TEXT_COLOR,
-      bg_color: DEFAULT_BG_COLOR,
-    };
-  }
-  chrome.storage.sync.set({ keymap_keys: keyMappings });
+    if (result.keymap_enabled === undefined) {
+      updates.keymap_enabled = true;
+    }
+
+    if (result.keymap_keys === undefined) {
+      const keyMappings = {};
+      for (const key of ALL_KEYS) {
+        keyMappings[key] = {
+          text_color: DEFAULT_TEXT_COLOR,
+          bg_color: DEFAULT_BG_COLOR,
+        };
+      }
+      updates.keymap_keys = keyMappings;
+    }
+
+    if (Object.keys(updates).length > 0) {
+      chrome.storage.sync.set(updates);
+    }
+  });
 });
