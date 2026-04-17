@@ -37,17 +37,17 @@ window.addEventListener("load", () => {
     const toggleOnElem = document.getElementById("enable-extension-btn");
     const toggleOffElem = document.getElementById("disable-extension-btn");
     if (isEnabled) {
-      toggleOnElem.classList.add("active");
+      toggleOnElem.classList.add("active-btn");
       keyboardContainerElem.classList.remove("disabled");
     } else {
-      toggleOffElem.classList.add("active");
+      toggleOffElem.classList.add("active-btn");
       keyboardContainerElem.classList.add("disabled");
     }
 
     toggleOnElem.addEventListener("click", () => {
       isEnabled = true;
-      toggleOffElem.classList.remove("active");
-      toggleOnElem.classList.add("active");
+      toggleOffElem.classList.remove("active-btn");
+      toggleOnElem.classList.add("active-btn");
       keyboardContainerElem.classList.remove("disabled");
 
       chrome.storage.sync.set({ keymap_enabled: true });
@@ -55,8 +55,8 @@ window.addEventListener("load", () => {
 
     toggleOffElem.addEventListener("click", () => {
       isEnabled = false;
-      toggleOnElem.classList.remove("active");
-      toggleOffElem.classList.add("active");
+      toggleOnElem.classList.remove("active-btn");
+      toggleOffElem.classList.add("active-btn");
       keyboardContainerElem.classList.add("disabled");
 
       deselectAllKeys();
