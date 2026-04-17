@@ -56,14 +56,20 @@ const startObserver = () => {
 };
 
 const keyboardObserver = new MutationObserver((mutations) => {
+  const seen = new Set();
+
   for (const mutation of mutations) {
     const elem = mutation.target;
     if (!elem.classList.contains("keymapKey")) {
       continue;
     }
 
+    if (seen.has(elem)) {
+      continue;
+    }
+    seen.add(elem);
+
     changeKeyColour(elem, FRAME_DELAY);
-    break;
   }
 });
 
@@ -127,7 +133,5 @@ const changeKeyColour = (key, delay) => {
     requestAnimationFrame(() => keyStyleDelay(numFrames - 1));
   };
 
-  if (color) {
-    keyStyleDelay(delay);
-  }
+  keyStyleDelay(delay);
 };
