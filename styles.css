@@ -11,13 +11,13 @@
 body {
   min-height: 400px;
   width: 700px;
-  margin: 24px;
+  margin: 24px 24px 12px 24px;
 
   background-color: var(--background-color);
   color: var(--sub-color);
 
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 400;
 }
 
 h1 {
@@ -28,12 +28,20 @@ button {
   all: unset;
 }
 
+a {
+  color: var(--sub-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--text-color);
+}
+
 #keyboard {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-top: 40px;
-  margin-bottom: 32px;
 }
 
 .disabled {
@@ -127,6 +135,9 @@ button {
 
   background-color: var(--sub-alt-color);
   color: var(--text-color);
+
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .btn.active-btn {
@@ -158,9 +169,6 @@ button {
   width: fit-content;
 
   background-color: var(--sub-alt-color);
-
-  font-size: 0.875rem;
-  font-weight: 400;
 }
 
 .control-group > * {
@@ -196,6 +204,9 @@ button {
 
 .color-setting label {
   margin-bottom: 2px;
+
+  font-size: 1rem;
+  font-weight: 500;
 }
 
 .color-picker-wrapper {
@@ -233,4 +244,16 @@ button {
   color: var(--sub-alt-color);
 
   pointer-events: none;
+}
+
+.divider {
+  border-top: 1px solid var(--sub-color);
+  margin-top: 16px;
+  opacity: 0.25;
+}
+
+#footer {
+  display: flex;
+  justify-content: space-between;
+  margin: 12px;
 }
