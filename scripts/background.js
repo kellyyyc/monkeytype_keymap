@@ -2,7 +2,7 @@ import {
   ALL_KEYS,
   DEFAULT_TEXT_COLOR,
   DEFAULT_BG_COLOR,
-} from "./utils/constants.js";
+} from "../utils/constants.js";
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.get(["keymap_enabled", "keymap_keys"], (result) => {

@@ -195,6 +195,10 @@
   align-items: center;
 }
 
+#footer .btn {
+  margin: 0px;
+}
+
 #footer .center {
   margin: 0 auto;
 }

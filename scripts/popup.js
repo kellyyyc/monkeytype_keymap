@@ -3,7 +3,7 @@ import {
   KEYBOARD_LAYOUT,
   BLACK,
   RAINBOW_COLORS,
-} from "./utils/constants.js";
+} from "../utils/constants.js";
 
 const styles = getComputedStyle(document.documentElement);
 
