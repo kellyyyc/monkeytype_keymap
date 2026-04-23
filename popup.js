@@ -24,6 +24,15 @@ let keyMappings = {};
 let isEnabled = false;
 
 window.addEventListener("load", () => {
+  for (const linkElem of document.querySelectorAll("[data-extension-page]")) {
+    linkElem.addEventListener("click", (event) => {
+      event.preventDefault();
+      chrome.tabs.create({
+        url: chrome.runtime.getURL(linkElem.dataset.extensionPage),
+      });
+    });
+  }
+
   for (const key of ALL_KEYS) {
     selected[key] = false;
   }

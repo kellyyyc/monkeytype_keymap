@@ -125,7 +125,7 @@ a:hover {
   font-size: 0.9375rem;
 }
 
-.btn {
+.toggle-btn {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -140,17 +140,17 @@ a:hover {
   font-weight: 500;
 }
 
-.btn.active-btn {
+.toggle-btn.active-btn {
   background-color: var(--main-color);
   color: var(--background-color);
 }
 
-.btn:hover {
+.toggle-btn:hover {
   background-color: var(--text-color);
   color: var(--background-color);
 }
 
-.btn:active {
+.toggle-btn:active {
   background-color: var(--sub-color);
   color: var(--background-color);
 }
@@ -175,16 +175,16 @@ a:hover {
   padding: 0 10px;
 }
 
-.options-btn {
+.btn {
   margin-bottom: 2px;
 }
 
-.options-btn:hover {
+.btn:hover {
   cursor: pointer;
   color: var(--text-color);
 }
 
-.options-btn:active {
+.btn:active {
   color: var(--sub-color);
 }
 
@@ -254,6 +254,10 @@ a:hover {
 
 #footer {
   display: flex;
-  justify-content: space-between;
   margin: 12px;
+  align-items: center;
+}
+
+#footer .center {
+  margin: 0 auto;
 }
