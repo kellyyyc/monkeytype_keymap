@@ -1,40 +1,7 @@
-:root {
-  --background-color: #323437;
-  --main-color: #e2b714;
-  --error-color: #ca4754;
-  --sub-alt-color: #2c2e31;
-  --sub-color: #646669;
-  --text-color: #d1d0c5;
-  --extra-error-color: #7e2a33;
-}
-
-body {
+.popup-body {
   min-height: 400px;
   width: 700px;
   margin: 24px 24px 12px 24px;
-
-  background-color: var(--background-color);
-  color: var(--sub-color);
-
-  font-size: 0.875rem;
-  font-weight: 400;
-}
-
-h1 {
-  margin: 0;
-}
-
-button {
-  all: unset;
-}
-
-a {
-  color: var(--sub-color);
-  text-decoration: none;
-}
-
-a:hover {
-  color: var(--text-color);
 }
 
 #keyboard {
@@ -48,23 +15,6 @@ a:hover {
   opacity: 0.5;
   z-index: 1000;
   pointer-events: none;
-}
-
-#header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-#header-title {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-}
-
-.icon {
-  height: 24px;
-  padding-top: 4px;
 }
 
 #extension-toggle {
@@ -173,19 +123,6 @@ a:hover {
 
 .control-group > * {
   padding: 0 10px;
-}
-
-.btn {
-  margin-bottom: 2px;
-}
-
-.btn:hover {
-  cursor: pointer;
-  color: var(--text-color);
-}
-
-.btn:active {
-  color: var(--sub-color);
 }
 
 .color-controls {
