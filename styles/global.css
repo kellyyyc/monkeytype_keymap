@@ -10,7 +10,7 @@
 
 body {
   background-color: var(--background-color);
-  color: var(--sub-color);
+  color: var(--text-color);
 
   font-size: 0.875rem;
   font-weight: 400;
@@ -18,24 +18,43 @@ body {
 
 h1 {
   margin: 0;
+  color: var(--sub-color);
 
   font-size: 2rem;
 }
 
 h2 {
   margin: 0;
+  color: var(--sub-color);
 
   font-size: 1.5rem;
 }
 
 h3 {
   margin: 0;
+  color: var(--sub-color);
 
   font-size: 1rem;
 }
 
 button {
   all: unset;
+
+  color: var(--sub-color);
+}
+
+a {
+  color: var(--main-color);
+  margin-bottom: 2px;
+}
+
+a:hover {
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+a:active {
+  color: var(--sub-color);
 }
 
 #header {

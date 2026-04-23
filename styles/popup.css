@@ -137,6 +137,8 @@
   align-items: center;
   gap: 10px;
   height: 32px;
+
+  color: var(--sub-color);
 }
 
 .color-setting label {
