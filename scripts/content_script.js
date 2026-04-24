@@ -49,7 +49,7 @@ const startObserver = () => {
   });
 
   for (const key of keys) {
-    changeKeyColour(key, 0);
+    changeKeyColor(key, 0);
   }
 
   return true;
@@ -69,7 +69,7 @@ const keyboardObserver = new MutationObserver((mutations) => {
     }
     seen.add(elem);
 
-    changeKeyColour(elem, FRAME_DELAY);
+    changeKeyColor(elem, FRAME_DELAY);
   }
 });
 
@@ -85,11 +85,11 @@ const testObserver = new MutationObserver((mutations) => {
   }
 
   for (const key of keys) {
-    changeKeyColour(key, 0);
+    changeKeyColor(key, 0);
   }
 });
 
-const changeKeyColour = (key, delay) => {
+const changeKeyColor = (key, delay) => {
   let letter = null;
 
   const dataKey = key.getAttribute("data-key");

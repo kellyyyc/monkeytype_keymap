@@ -30,3 +30,11 @@ p {
   gap: 24px;
   margin-top: 60px;
 }
+
+.steps {
+  margin-left: 10px;
+}
+
+.note {
+  margin-left: 20px;
+}
