@@ -1,4 +1,9 @@
+const DARK_GRAY = "#111111";
+const WHITE = "#ffffff";
+
 const FRAME_DELAY = 5;
+const MAX_RGB_VALUE = 0xff;
+const WHITE_TOLERANCE = 0x33;
 
 let keyColors = null;
 
@@ -89,6 +94,19 @@ const testObserver = new MutationObserver((mutations) => {
   }
 });
 
+const isNearWhite = (rgb_str) => {
+  const r = parseInt(rgb_str.slice(1, 3), 16);
+  const g = parseInt(rgb_str.slice(3, 5), 16);
+  const b = parseInt(rgb_str.slice(5, 7), 16);
+
+  const isLight =
+    MAX_RGB_VALUE - r < WHITE_TOLERANCE &&
+    MAX_RGB_VALUE - g < WHITE_TOLERANCE &&
+    MAX_RGB_VALUE - b < WHITE_TOLERANCE;
+
+  return isLight;
+};
+
 const changeKeyColor = (key, delay) => {
   let letter = null;
 
@@ -113,7 +131,14 @@ const changeKeyColor = (key, delay) => {
   }
 
   if (key.classList.contains("activeKey")) {
-    key.style.backgroundColor = "#ffffff";
+    if (isNearWhite(color.bg_color)) {
+      key.style.backgroundColor = DARK_GRAY;
+      key.style.color = WHITE;
+    } else {
+      key.style.backgroundColor = WHITE;
+      key.style.color = DARK_GRAY;
+    }
+
     return;
   }
 

@@ -9,7 +9,7 @@ export const ALL_KEYS = KEYBOARD_LAYOUT.flat();
 
 // colors definitions
 export const BLACK = "#000000";
-export const WHITE = "#FFFFFF";
+export const WHITE = "#ffffff";
 export const DEFAULT_TEXT_COLOR = "#646669";
 export const DEFAULT_BG_COLOR = "#2c2e31";
 
