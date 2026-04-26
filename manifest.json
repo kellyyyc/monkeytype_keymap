@@ -1,6 +1,6 @@
 {
   "name": "Monkeytype Keymap+",
-  "description": "Customise the on-screen keyboard",
+  "description": "Customise the on-screen keyboard.",
   "version": "1.2.0",
   "manifest_version": 3,
   "permissions": ["storage"],
