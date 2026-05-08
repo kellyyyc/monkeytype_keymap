@@ -54,8 +54,8 @@
   cursor: pointer;
 }
 
-.key:hover .letter {
-  color: var(--main-color);
+.key:hover {
+  opacity: 0.85;
 }
 
 .letter {
