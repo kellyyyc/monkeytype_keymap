@@ -199,10 +199,10 @@ const deselectAllKeys = () => {
 const renderKeyboardElem = (colorsArr) => {
   const keyboardElem = document.getElementById("keyboard");
   keyboardElem.replaceChildren();
-  KEYBOARD_LAYOUT.forEach((row, i) => {
+  KEYBOARD_LAYOUT.forEach((row, row_idx) => {
     const rowElem = document.createElement("div");
     rowElem.className = "row";
-    rowElem.id = "row-" + i;
+    rowElem.id = "row-" + row_idx;
     for (const key of row) {
       const keyColor = colorsArr[key];
       const keyElem = createKeyElem(
@@ -241,7 +241,6 @@ const createKeyElem = (key, textColor, bgColor) => {
   letterElem.className = "letter";
   letterElem.textContent = key;
   letterElem.style.color = textColor;
-
   keyElem.appendChild(letterElem);
 
   return keyElem;

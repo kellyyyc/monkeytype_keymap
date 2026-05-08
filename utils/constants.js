@@ -4,7 +4,6 @@ export const KEYBOARD_LAYOUT = [
   ["z", "x", "c", "v", "b", "n", "m", ",", ".", "/"],
   ["spacebar"],
 ];
-
 export const ALL_KEYS = KEYBOARD_LAYOUT.flat();
 
 // colors definitions
