@@ -8,14 +8,12 @@ Users can select individual keys and change their text or background colors to c
 
 ## Features
 
-- Customise the colors of individual keyboard keys
-- Change text and background colors
+- Customise the text and background colors of individual keyboard keys
 - Select multiple keys at once
 - Apply a rainbow preset for touch-typing practice
-- Enable or disable the extension
-- Automatically save settings using Chrome Storage
-- Automatically apply saved colors when Monkeytype loads
-- Supports Monkeytype’s Static, React, and Next keymap modes
+- Save settings using Chrome's built-in Storage
+- Apply saved colors when Monkeytype loads
+- Supports Monkeytype's Static, React, and Next keymap options
 
 ## Install
 
