@@ -7,7 +7,8 @@
   "content_scripts": [
     {
       "matches": ["https://monkeytype.com/*", "https://*.monkeytype.com/*"],
-      "js": ["scripts/content_script.js"]
+      "js": ["scripts/content_script.js"],
+      "css": ["styles/content_script.css"]
     }
   ],
   "action": {
