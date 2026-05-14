@@ -98,7 +98,7 @@ window.addEventListener("load", () => {
     });
 
     document
-      .getElementById("save-settings-btn")
+      .getElementById("save-options-btn")
       .addEventListener("click", () => {
         chrome.storage.sync.set({ keymap_keys: keyMappings });
       });
@@ -150,19 +150,17 @@ window.addEventListener("load", () => {
     renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
   });
 
-  document
-    .getElementById("reset-settings-btn")
-    .addEventListener("click", () => {
-      if (!isEnabled) {
-        return;
-      }
+  document.getElementById("reset-options-btn").addEventListener("click", () => {
+    if (!isEnabled) {
+      return;
+    }
 
-      for (const key of ALL_KEYS) {
-        keyMappings[key] = getDefaultKeyMapping();
-      }
+    for (const key of ALL_KEYS) {
+      keyMappings[key] = getDefaultKeyMapping();
+    }
 
-      renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
-    });
+    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
+  });
 
   document.getElementById("rainbow-mode-btn").addEventListener("click", () => {
     if (!isEnabled) {
