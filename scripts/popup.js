@@ -1,4 +1,6 @@
 import {
+  DEFAULT_LAYOUT,
+  ANGLE_MOD_LAYOUT,
   ALL_KEYS,
   KEYBOARD_LAYOUT,
   BLACK,
@@ -21,7 +23,8 @@ for (const [key, cssVar] of Object.entries(cssVars)) {
 
 const selected = {};
 let keyMappings = {};
-let isEnabled = false;
+let isExtensionEnabled = false;
+let isAngleModEnabled = false;
 
 window.addEventListener("load", () => {
   const keyboardElem = document.getElementById("keyboard");
@@ -54,58 +57,62 @@ window.addEventListener("load", () => {
     updateBgPicker(bgPickerElem, bgPickerParentElem, selectedBgColor);
   };
 
-  chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
-    keyMappings = result["keymap_keys"] ?? {};
-    for (const key of ALL_KEYS) {
-      if (!keyMappings[key]) {
-        keyMappings[key] = getDefaultKeyMapping();
+  chrome.storage.sync
+    .get(["keymap_enabled", "keymap_angle_mod_enabled", "keymap_keys"])
+    .then((result) => {
+      keyMappings = result["keymap_keys"] ?? {};
+      isAngleModEnabled = result["keymap_angle_mod_enabled"] ?? false;
+      isExtensionEnabled = result["keymap_enabled"] ?? false;
+
+      for (const key of ALL_KEYS) {
+        if (!keyMappings[key]) {
+          keyMappings[key] = getDefaultKeyMapping();
+        }
       }
-    }
 
-    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
+      renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
 
-    isEnabled = result["keymap_enabled"] ?? false;
-    const toggleOnElem = document.getElementById("enable-extension-btn");
-    const toggleOffElem = document.getElementById("disable-extension-btn");
-    if (isEnabled) {
-      toggleOnElem.classList.add("active-btn");
-      keyboardElem.classList.remove("disabled");
-    } else {
-      toggleOffElem.classList.add("active-btn");
-      keyboardElem.classList.add("disabled");
-    }
+      const toggleOnElem = document.getElementById("enable-extension-btn");
+      const toggleOffElem = document.getElementById("disable-extension-btn");
+      if (isExtensionEnabled) {
+        toggleOnElem.classList.add("active-btn");
+        keyboardElem.classList.remove("disabled");
+      } else {
+        toggleOffElem.classList.add("active-btn");
+        keyboardElem.classList.add("disabled");
+      }
 
-    toggleOnElem.addEventListener("click", () => {
-      isEnabled = true;
-      toggleOffElem.classList.remove("active-btn");
-      toggleOnElem.classList.add("active-btn");
-      keyboardElem.classList.remove("disabled");
+      toggleOnElem.addEventListener("click", () => {
+        isExtensionEnabled = true;
+        toggleOffElem.classList.remove("active-btn");
+        toggleOnElem.classList.add("active-btn");
+        keyboardElem.classList.remove("disabled");
 
-      chrome.storage.sync.set({ keymap_enabled: true });
-    });
-
-    toggleOffElem.addEventListener("click", () => {
-      isEnabled = false;
-      toggleOnElem.classList.remove("active-btn");
-      toggleOffElem.classList.add("active-btn");
-      keyboardElem.classList.add("disabled");
-
-      deselectAllKeys();
-      updateTextPicker(textPickerElem, textPickerIcon);
-      updateBgPicker(bgPickerElem, bgPickerParentElem);
-
-      chrome.storage.sync.set({ keymap_enabled: false });
-    });
-
-    document
-      .getElementById("save-options-btn")
-      .addEventListener("click", () => {
-        chrome.storage.sync.set({ keymap_keys: keyMappings });
+        chrome.storage.sync.set({ keymap_enabled: true });
       });
-  });
+
+      toggleOffElem.addEventListener("click", () => {
+        isExtensionEnabled = false;
+        toggleOnElem.classList.remove("active-btn");
+        toggleOffElem.classList.add("active-btn");
+        keyboardElem.classList.add("disabled");
+
+        deselectAllKeys();
+        updateTextPicker(textPickerElem, textPickerIcon);
+        updateBgPicker(bgPickerElem, bgPickerParentElem);
+
+        chrome.storage.sync.set({ keymap_enabled: false });
+      });
+
+      document
+        .getElementById("save-options-btn")
+        .addEventListener("click", () => {
+          chrome.storage.sync.set({ keymap_keys: keyMappings });
+        });
+    });
 
   document.getElementById("select-all-btn").addEventListener("click", () => {
-    if (!isEnabled) {
+    if (!isExtensionEnabled) {
       return;
     }
 
@@ -115,7 +122,7 @@ window.addEventListener("load", () => {
   document
     .getElementById("clear-selection-btn")
     .addEventListener("click", () => {
-      if (!isEnabled) {
+      if (!isExtensionEnabled) {
         return;
       }
 
@@ -151,7 +158,7 @@ window.addEventListener("load", () => {
   });
 
   document.getElementById("reset-options-btn").addEventListener("click", () => {
-    if (!isEnabled) {
+    if (!isExtensionEnabled) {
       return;
     }
 
@@ -163,20 +170,16 @@ window.addEventListener("load", () => {
   });
 
   document.getElementById("rainbow-mode-btn").addEventListener("click", () => {
-    if (!isEnabled) {
+    if (!isExtensionEnabled) {
       return;
     }
 
-    KEYBOARD_LAYOUT.forEach((row) => {
-      for (const [i, key] of row.entries()) {
-        const color = getRainbowColor(i);
+    KEYBOARD_LAYOUT.forEach((row, rowIdx) => {
+      for (const [idx, key] of row.entries()) {
+        const color = getRainbowColor(rowIdx, idx);
         keyMappings[key] = { text_color: BLACK, bg_color: color };
       }
     });
-    keyMappings["spacebar"] = {
-      text_color: BLACK,
-      bg_color: getRainbowColor(-1),
-    };
 
     renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
   });
@@ -280,6 +283,9 @@ const getDefaultKeyMapping = () => {
   };
 };
 
-const getRainbowColor = (idx) => {
-  return RAINBOW_COLORS[idx] ?? colors.subAltColor;
+const getRainbowColor = (rowIdx, keyIdx) => {
+  const layout = isAngleModEnabled ? ANGLE_MOD_LAYOUT : DEFAULT_LAYOUT;
+  const finger = layout[rowIdx]?.[keyIdx];
+
+  return RAINBOW_COLORS[finger] ?? colors.subAltColor;
 };

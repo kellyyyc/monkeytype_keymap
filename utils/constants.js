@@ -1,3 +1,27 @@
+const LP = 0;
+const LR = 1;
+const LM = 2;
+const LI = 3;
+const RI = 4;
+const RM = 5;
+const RR = 6;
+const RP = 7;
+const THUMB = 8;
+
+export const DEFAULT_LAYOUT = [
+  [LP, LR, LM, LI, LI, RI, RI, RM, RR, RP, RP, RP],
+  [LP, LR, LM, LI, LI, RI, RI, RM, RR, RP, RP],
+  [LP, LR, LM, LI, LI, RI, RI, RM, RR, RP],
+  [THUMB],
+];
+
+export const ANGLE_MOD_LAYOUT = [
+  [LP, LR, LM, LI, LI, RI, RI, RM, RR, RP, RP, RP],
+  [LP, LR, LM, LI, LI, RI, RI, RM, RR, RP, RP],
+  [LR, LM, LI, LI, RI, RI, RI, RM, RR, RP],
+  [THUMB],
+];
+
 export const KEYBOARD_LAYOUT = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"],
   ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'"],
@@ -13,17 +37,13 @@ export const DEFAULT_TEXT_COLOR = "#646669";
 export const DEFAULT_BG_COLOR = "#2c2e31";
 
 export const RAINBOW_COLORS = {
-  "-1": "#9b86ef",
   0: "#f22d49",
   1: "#efb30e",
   2: "#6fd476",
   3: "#06b6f1",
-  4: "#06b6f1",
-  5: "#3890d7",
-  6: "#3890d7",
-  7: "#91e0ed",
-  8: "#ede568",
-  9: "#eda1e9",
-  10: "#eda1e9",
-  11: "#eda1e9",
+  4: "#3890d7",
+  5: "#91e0ed",
+  6: "#ede568",
+  7: "#eda1e9",
+  8: "#9b86ef",
 };

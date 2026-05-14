@@ -35,6 +35,13 @@ p {
   margin-bottom: 16px;
 }
 
+.settings-row {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+}
+
 .content-block {
   max-width: 50%;
 }
@@ -45,4 +52,17 @@ p {
 
 .note {
   margin-left: 20px;
+}
+
+.settings-btn-container {
+  display: flex;
+  gap: 8px;
+  width: 40%;
+}
+
+.settings-btn {
+  padding: 12px;
+  height: 40px;
+  flex-grow: 1;
+  font-weight: 500;
 }
