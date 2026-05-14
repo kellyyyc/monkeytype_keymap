@@ -206,10 +206,10 @@ const deselectAllKeys = () => {
 
 const renderKeyboardElem = (keyboardElem, colorsArr, handleKeyClick) => {
   keyboardElem.replaceChildren();
-  KEYBOARD_LAYOUT.forEach((row, row_idx) => {
+  KEYBOARD_LAYOUT.forEach((row, rowIdx) => {
     const rowElem = document.createElement("div");
     rowElem.className = "row";
-    rowElem.id = "row-" + row_idx;
+    rowElem.id = "row-" + rowIdx;
     for (const key of row) {
       const keyColor = colorsArr[key] ?? getDefaultKeyMapping();
       const keyElem = createKeyElem(
