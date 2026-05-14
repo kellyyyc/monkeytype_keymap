@@ -266,10 +266,10 @@ const updateTextPicker = (textPickerElem, textPickerIcon, color = null) => {
   }
 };
 
-const updateBgPicker = (bgPickerElem, bgPickerBgElem, color = null) => {
+const updateBgPicker = (bgPickerElem, bgPickerParentElem, color = null) => {
   color = color ? color : colors.subColor;
 
-  bgPickerBgElem.style.backgroundColor = color;
+  bgPickerParentElem.style.backgroundColor = color;
   if (bgPickerElem.value !== color) {
     bgPickerElem.value = color;
   }
