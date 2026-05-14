@@ -211,7 +211,7 @@ const renderKeyboardElem = (keyboardElem, colorsArr, handleKeyClick) => {
     rowElem.className = "row";
     rowElem.id = "row-" + row_idx;
     for (const key of row) {
-      const keyColor = colorsArr[key] ?? getDefaultKeyMapping;
+      const keyColor = colorsArr[key] ?? getDefaultKeyMapping();
       const keyElem = createKeyElem(
         key,
         keyColor.text_color,
