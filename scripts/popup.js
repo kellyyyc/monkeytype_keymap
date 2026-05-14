@@ -258,7 +258,7 @@ const updateTextPicker = (textPickerElem, textPickerIcon, color = null) => {
 
   textPickerIcon.style.color = color;
 
-  if (textPickerElem.value != color) {
+  if (textPickerElem.value !== color) {
     textPickerElem.value = color;
   }
 };
@@ -267,7 +267,7 @@ const updateBgPicker = (bgPickerElem, bgPickerBgElem, color = null) => {
   color = color ? color : colors.subColor;
 
   bgPickerBgElem.style.backgroundColor = color;
-  if (bgPickerElem.value != color) {
+  if (bgPickerElem.value !== color) {
     bgPickerElem.value = color;
   }
 };
