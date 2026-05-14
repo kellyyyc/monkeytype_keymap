@@ -45,10 +45,10 @@ window.addEventListener("load", () => {
 
   const handleKeyClick = (key) => {
     const selectedCount = Object.values(selected).filter(Boolean).length;
-    const selectedTextColor =
-      selectedCount === 1 ? keyMappings[key].text_color : null;
-    const selectedBgColor =
-      selectedCount === 1 ? keyMappings[key].bg_color : null;
+    const keyColor = keyMappings[key];
+
+    const selectedTextColor = selectedCount === 1 ? keyColor.text_color : null;
+    const selectedBgColor = selectedCount === 1 ? keyColor.bg_color : null;
 
     updateTextPicker(textPickerElem, textPickerIcon, selectedTextColor);
     updateBgPicker(bgPickerElem, bgPickerParentElem, selectedBgColor);
@@ -56,6 +56,12 @@ window.addEventListener("load", () => {
 
   chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
     keyMappings = result["keymap_keys"] ?? {};
+    for (const key of ALL_KEYS) {
+      if (!keyMappings[key]) {
+        keyMappings[key] = getDefaultKeyMapping();
+      }
+    }
+
     renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
 
     isEnabled = result["keymap_enabled"] ?? false;
@@ -152,10 +158,7 @@ window.addEventListener("load", () => {
       }
 
       for (const key of ALL_KEYS) {
-        keyMappings[key] = {
-          text_color: colors.subColor,
-          bg_color: colors.subAltColor,
-        };
+        keyMappings[key] = getDefaultKeyMapping();
       }
 
       renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
@@ -208,7 +211,7 @@ const renderKeyboardElem = (keyboardElem, colorsArr, handleKeyClick) => {
     rowElem.className = "row";
     rowElem.id = "row-" + row_idx;
     for (const key of row) {
-      const keyColor = colorsArr[key];
+      const keyColor = colorsArr[key] ?? getDefaultKeyMapping;
       const keyElem = createKeyElem(
         key,
         keyColor.text_color,
@@ -270,6 +273,13 @@ const updateBgPicker = (bgPickerElem, bgPickerBgElem, color = null) => {
   if (bgPickerElem.value !== color) {
     bgPickerElem.value = color;
   }
+};
+
+const getDefaultKeyMapping = () => {
+  return {
+    text_color: colors.subColor,
+    bg_color: colors.subAltColor,
+  };
 };
 
 const getRainbowColor = (idx) => {
