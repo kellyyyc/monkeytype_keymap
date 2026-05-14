@@ -25,11 +25,10 @@ let isEnabled = false;
 
 window.addEventListener("load", () => {
   const keyboardElem = document.getElementById("keyboard");
-  const textColorPickerElem = document.getElementById("text-color-picker");
-  const textColorPickerIcon =
-    textColorPickerElem.parentElement.querySelector("svg");
-  const bgColorPickerElem = document.getElementById("bg-color-picker");
-  const bgColorPickerParentElem = bgColorPickerElem.parentElement;
+  const textPickerElem = document.getElementById("text-color-picker");
+  const textPickerIcon = textPickerElem.parentElement.querySelector("svg");
+  const bgPickerElem = document.getElementById("bg-color-picker");
+  const bgPickerParentElem = bgPickerElem.parentElement;
 
   for (const linkElem of document.querySelectorAll("[data-extension-page]")) {
     linkElem.addEventListener("click", (event) => {
@@ -51,16 +50,8 @@ window.addEventListener("load", () => {
     const selectedBgColor =
       selectedCount === 1 ? keyMappings[key].bg_color : null;
 
-    updateTextColorPicker(
-      textColorPickerElem,
-      textColorPickerIcon,
-      selectedTextColor,
-    );
-    updateBgColorPicker(
-      bgColorPickerElem,
-      bgColorPickerParentElem,
-      selectedBgColor,
-    );
+    updateTextPicker(textPickerElem, textPickerIcon, selectedTextColor);
+    updateBgPicker(bgPickerElem, bgPickerParentElem, selectedBgColor);
   };
 
   chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
@@ -94,8 +85,8 @@ window.addEventListener("load", () => {
       keyboardElem.classList.add("disabled");
 
       deselectAllKeys();
-      updateTextColorPicker(textColorPickerElem, textColorPickerIcon);
-      updateBgColorPicker(bgColorPickerElem, bgColorPickerParentElem);
+      updateTextPicker(textPickerElem, textPickerIcon);
+      updateBgPicker(bgPickerElem, bgPickerParentElem);
 
       chrome.storage.sync.set({ keymap_enabled: false });
     });
@@ -125,14 +116,10 @@ window.addEventListener("load", () => {
       deselectAllKeys();
     });
 
-  updateTextColorPicker(textColorPickerElem, textColorPickerIcon);
-  textColorPickerElem.addEventListener("input", () => {
-    const selectedColor = textColorPickerElem.value;
-    updateTextColorPicker(
-      textColorPickerElem,
-      textColorPickerIcon,
-      selectedColor,
-    );
+  updateTextPicker(textPickerElem, textPickerIcon);
+  textPickerElem.addEventListener("input", () => {
+    const selectedColor = textPickerElem.value;
+    updateTextPicker(textPickerElem, textPickerIcon, selectedColor);
 
     for (const [key, isSelected] of Object.entries(selected)) {
       if (isSelected) {
@@ -143,14 +130,10 @@ window.addEventListener("load", () => {
     renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
   });
 
-  updateBgColorPicker(bgColorPickerElem, bgColorPickerParentElem);
-  bgColorPickerElem.addEventListener("input", () => {
-    const selectedColor = bgColorPickerElem.value;
-    updateBgColorPicker(
-      bgColorPickerElem,
-      bgColorPickerParentElem,
-      selectedColor,
-    );
+  updateBgPicker(bgPickerElem, bgPickerParentElem);
+  bgPickerElem.addEventListener("input", () => {
+    const selectedColor = bgPickerElem.value;
+    updateBgPicker(bgPickerElem, bgPickerParentElem, selectedColor);
 
     for (const [key, isSelected] of Object.entries(selected)) {
       if (isSelected) {
@@ -270,30 +253,22 @@ const createKeyElem = (key, textColor, bgColor, handleKeyClick) => {
   return keyElem;
 };
 
-const updateTextColorPicker = (
-  colorPickerElem,
-  colorPickerIcon,
-  color = null,
-) => {
+const updateTextPicker = (textPickerElem, textPickerIcon, color = null) => {
   color = color ? color : colors.subColor;
 
-  colorPickerIcon.style.color = color;
+  textPickerIcon.style.color = color;
 
-  if (colorPickerElem.value != color) {
-    colorPickerElem.value = color;
+  if (textPickerElem.value != color) {
+    textPickerElem.value = color;
   }
 };
 
-const updateBgColorPicker = (
-  colorPickerElem,
-  colorPickerBgElem,
-  color = null,
-) => {
+const updateBgPicker = (bgPickerElem, bgPickerBgElem, color = null) => {
   color = color ? color : colors.subColor;
 
-  colorPickerBgElem.style.backgroundColor = color;
-  if (colorPickerElem.value != color) {
-    colorPickerElem.value = color;
+  bgPickerBgElem.style.backgroundColor = color;
+  if (bgPickerElem.value != color) {
+    bgPickerElem.value = color;
   }
 };
 
