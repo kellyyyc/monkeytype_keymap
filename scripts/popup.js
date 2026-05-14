@@ -2,7 +2,7 @@ import {
   DEFAULT_LAYOUT,
   ANGLE_MOD_LAYOUT,
   ALL_KEYS,
-  KEYBOARD_LAYOUT,
+  KEYBOARD_LAYOUTS,
   BLACK,
   RAINBOW_COLORS,
 } from "../utils/constants.js";
@@ -23,6 +23,7 @@ for (const [key, cssVar] of Object.entries(cssVars)) {
 
 const selected = {};
 let keyMappings = {};
+let selectedKeyboardLayout = "qwerty";
 let isExtensionEnabled = false;
 let isAngleModEnabled = false;
 
@@ -58,9 +59,15 @@ window.addEventListener("load", () => {
   };
 
   chrome.storage.sync
-    .get(["keymap_enabled", "keymap_angle_mod_enabled", "keymap_keys"])
+    .get([
+      "keymap_enabled",
+      "keymap_keyboard_layout",
+      "keymap_angle_mod_enabled",
+      "keymap_keys",
+    ])
     .then((result) => {
       keyMappings = result["keymap_keys"] ?? {};
+      selectedKeyboardLayout = result["keymap_keyboard_layout"] ?? "qwerty";
       isAngleModEnabled = result["keymap_angle_mod_enabled"] ?? false;
       isExtensionEnabled = result["keymap_enabled"] ?? false;
 
@@ -174,7 +181,10 @@ window.addEventListener("load", () => {
       return;
     }
 
-    KEYBOARD_LAYOUT.forEach((row, rowIdx) => {
+    const keyboardLayout =
+      KEYBOARD_LAYOUTS[selectedKeyboardLayout] ?? KEYBOARD_LAYOUTS.qwerty;
+
+    keyboardLayout.forEach((row, rowIdx) => {
       for (const [idx, key] of row.entries()) {
         const color = getRainbowColor(rowIdx, idx);
         keyMappings[key] = { text_color: BLACK, bg_color: color };
@@ -207,7 +217,10 @@ const deselectAllKeys = () => {
 
 const renderKeyboardElem = (keyboardElem, colorsArr, handleKeyClick) => {
   keyboardElem.replaceChildren();
-  KEYBOARD_LAYOUT.forEach((row, rowIdx) => {
+  const keyboardLayout =
+    KEYBOARD_LAYOUTS[selectedKeyboardLayout] ?? KEYBOARD_LAYOUTS.qwerty;
+
+  keyboardLayout.forEach((row, rowIdx) => {
     const rowElem = document.createElement("div");
     rowElem.className = "row";
     rowElem.id = "row-" + rowIdx;
@@ -284,8 +297,8 @@ const getDefaultKeyMapping = () => {
 };
 
 const getRainbowColor = (rowIdx, keyIdx) => {
-  const layout = isAngleModEnabled ? ANGLE_MOD_LAYOUT : DEFAULT_LAYOUT;
-  const finger = layout[rowIdx]?.[keyIdx];
+  const rainbowLayout = isAngleModEnabled ? ANGLE_MOD_LAYOUT : DEFAULT_LAYOUT;
+  const finger = rainbowLayout[rowIdx]?.[keyIdx];
 
   return RAINBOW_COLORS[finger] ?? colors.subAltColor;
 };

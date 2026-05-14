@@ -22,13 +22,34 @@ export const ANGLE_MOD_LAYOUT = [
   [THUMB],
 ];
 
-export const KEYBOARD_LAYOUT = [
+const QWERTY_LAYOUT = [
   ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "[", "]"],
   ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "'"],
   ["z", "x", "c", "v", "b", "n", "m", ",", ".", "/"],
   ["spacebar"],
 ];
-export const ALL_KEYS = KEYBOARD_LAYOUT.flat();
+
+const DVORAK_LAYOUT = [
+  ["'", ",", ".", "p", "y", "f", "g", "c", "r", "l", "/", "="],
+  ["a", "o", "e", "u", "i", "d", "h", "t", "n", "s", "-"],
+  [";", "q", "j", "k", "x", "b", "m", "w", "v", "z"],
+  ["spacebar"],
+];
+
+const COLEMAK_LAYOUT = [
+  ["q", "w", "f", "p", "g", "j", "l", "u", "y", ";", "[", "]"],
+  ["a", "r", "s", "t", "d", "h", "n", "e", "i", "o", "'"],
+  ["z", "x", "c", "v", "b", "k", "m", ",", ".", "/"],
+  ["spacebar"],
+];
+
+export const ALL_KEYS = QWERTY_LAYOUT.flat();
+
+export const KEYBOARD_LAYOUTS = {
+  qwerty: QWERTY_LAYOUT,
+  dvorak: DVORAK_LAYOUT,
+  colemak: COLEMAK_LAYOUT,
+};
 
 // colors definitions
 export const BLACK = "#000000";

@@ -29,5 +29,7 @@ window.addEventListener("load", () => {
 
         chrome.storage.sync.set({ keymap_angle_mod_enabled: false });
       });
+
+      const keyboardLayout = result["keymap_keyboard_layout"] ?? "qwerty";
     });
 });
