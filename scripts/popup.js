@@ -257,7 +257,7 @@ const createKeyElem = (key, textColor, bgColor, handleKeyClick) => {
 };
 
 const updateTextPicker = (textPickerElem, textPickerIcon, color = null) => {
-  color = color ? color : colors.subColor;
+  color = color ?? colors.subColor;
 
   textPickerIcon.style.color = color;
 
@@ -267,7 +267,7 @@ const updateTextPicker = (textPickerElem, textPickerIcon, color = null) => {
 };
 
 const updateBgPicker = (bgPickerElem, bgPickerParentElem, color = null) => {
-  color = color ? color : colors.subColor;
+  color = color ?? colors.subColor;
 
   bgPickerParentElem.style.backgroundColor = color;
   if (bgPickerElem.value !== color) {
