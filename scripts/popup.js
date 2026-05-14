@@ -189,7 +189,7 @@ const selectAllKeys = () => {
     selected[key] = true;
   }
 
-  for (let elem of document.getElementsByClassName("key")) {
+  for (const elem of document.getElementsByClassName("key")) {
     elem.style.borderColor = colors.mainColor;
   }
 };
@@ -199,7 +199,7 @@ const deselectAllKeys = () => {
     selected[key] = false;
   }
 
-  for (let elem of document.getElementsByClassName("key")) {
+  for (const elem of document.getElementsByClassName("key")) {
     elem.style.borderColor = colors.backgroundColor;
   }
 };
