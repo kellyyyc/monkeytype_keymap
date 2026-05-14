@@ -17,13 +17,9 @@
   pointer-events: none;
 }
 
-#extension-toggle {
+#global-toggle {
   display: flex;
-  align-items: center;
-  gap: 8px;
-  padding-right: 20px;
-
-  cursor: pointer;
+  gap: 20px;
 }
 
 #settings {
@@ -31,6 +27,24 @@
   flex-direction: column;
   gap: 12px;
   margin-top: 24px;
+}
+
+#gear-icon {
+  height: 32px;
+  width: 32px;
+
+  color: var(--sub-color);
+  opacity: 75%;
+
+  cursor: pointer;
+}
+
+#gear-icon:hover {
+  color: var(--text-color);
+}
+
+#gear-icon:active {
+  color: var(--sub-color);
 }
 
 .row {
@@ -73,36 +87,6 @@
 
 .spacebar .letter {
   font-size: 0.9375rem;
-}
-
-.toggle-btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 32px;
-  width: 64px;
-  border-radius: 10px;
-
-  background-color: var(--sub-alt-color);
-  color: var(--text-color);
-
-  font-size: 1rem;
-  font-weight: 500;
-}
-
-.toggle-btn.active-btn {
-  background-color: var(--main-color);
-  color: var(--background-color);
-}
-
-.toggle-btn:hover {
-  background-color: var(--text-color);
-  color: var(--background-color);
-}
-
-.toggle-btn:active {
-  background-color: var(--sub-color);
-  color: var(--background-color);
 }
 
 .settings-row {

@@ -24,6 +24,13 @@ let keyMappings = {};
 let isEnabled = false;
 
 window.addEventListener("load", () => {
+  const keyboardElem = document.getElementById("keyboard");
+  const textColorPickerElem = document.getElementById("text-color-picker");
+  const textColorPickerIcon =
+    textColorPickerElem.parentElement.querySelector("svg");
+  const bgColorPickerElem = document.getElementById("bg-color-picker");
+  const bgColorPickerParentElem = bgColorPickerElem.parentElement;
+
   for (const linkElem of document.querySelectorAll("[data-extension-page]")) {
     linkElem.addEventListener("click", (event) => {
       event.preventDefault();
@@ -37,27 +44,45 @@ window.addEventListener("load", () => {
     selected[key] = false;
   }
 
+  const handleKeyClick = (key) => {
+    const selectedCount = Object.values(selected).filter(Boolean).length;
+    const selectedTextColor =
+      selectedCount === 1 ? keyMappings[key].text_color : null;
+    const selectedBgColor =
+      selectedCount === 1 ? keyMappings[key].bg_color : null;
+
+    updateTextColorPicker(
+      textColorPickerElem,
+      textColorPickerIcon,
+      selectedTextColor,
+    );
+    updateBgColorPicker(
+      bgColorPickerElem,
+      bgColorPickerParentElem,
+      selectedBgColor,
+    );
+  };
+
   chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
     keyMappings = result["keymap_keys"] ?? {};
-    renderKeyboardElem(keyMappings);
+    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
 
     isEnabled = result["keymap_enabled"] ?? false;
-    const keyboardContainerElem = document.getElementById("keyboard");
     const toggleOnElem = document.getElementById("enable-extension-btn");
     const toggleOffElem = document.getElementById("disable-extension-btn");
     if (isEnabled) {
       toggleOnElem.classList.add("active-btn");
-      keyboardContainerElem.classList.remove("disabled");
+      keyboardElem.classList.remove("disabled");
     } else {
       toggleOffElem.classList.add("active-btn");
-      keyboardContainerElem.classList.add("disabled");
+      keyboardElem.classList.add("disabled");
     }
 
     toggleOnElem.addEventListener("click", () => {
       isEnabled = true;
       toggleOffElem.classList.remove("active-btn");
       toggleOnElem.classList.add("active-btn");
-      keyboardContainerElem.classList.remove("disabled");
+      keyboardElem.classList.remove("disabled");
 
       chrome.storage.sync.set({ keymap_enabled: true });
     });
@@ -66,9 +91,11 @@ window.addEventListener("load", () => {
       isEnabled = false;
       toggleOnElem.classList.remove("active-btn");
       toggleOffElem.classList.add("active-btn");
-      keyboardContainerElem.classList.add("disabled");
+      keyboardElem.classList.add("disabled");
 
       deselectAllKeys();
+      updateTextColorPicker(textColorPickerElem, textColorPickerIcon);
+      updateBgColorPicker(bgColorPickerElem, bgColorPickerParentElem);
 
       chrome.storage.sync.set({ keymap_enabled: false });
     });
@@ -98,17 +125,14 @@ window.addEventListener("load", () => {
       deselectAllKeys();
     });
 
-  const textColorPickerElem = document.getElementById("text-color-picker");
-  textColorPickerElem.value = colors.subColor;
-
-  const textColorPickerParent = textColorPickerElem.parentElement;
-  const textColorPickerIcon = textColorPickerParent.querySelector("svg");
-  textColorPickerIcon.style.color = colors.subColor;
-
+  updateTextColorPicker(textColorPickerElem, textColorPickerIcon);
   textColorPickerElem.addEventListener("input", () => {
     const selectedColor = textColorPickerElem.value;
-
-    textColorPickerIcon.style.color = selectedColor;
+    updateTextColorPicker(
+      textColorPickerElem,
+      textColorPickerIcon,
+      selectedColor,
+    );
 
     for (const [key, isSelected] of Object.entries(selected)) {
       if (isSelected) {
@@ -116,19 +140,17 @@ window.addEventListener("load", () => {
       }
     }
 
-    renderKeyboardElem(keyMappings);
+    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
   });
 
-  const bgColorPickerElem = document.getElementById("bg-color-picker");
-  bgColorPickerElem.value = colors.subColor;
-
-  const bgColorPickerParent = bgColorPickerElem.parentElement;
-  bgColorPickerParent.style.backgroundColor = colors.subColor;
-
+  updateBgColorPicker(bgColorPickerElem, bgColorPickerParentElem);
   bgColorPickerElem.addEventListener("input", () => {
     const selectedColor = bgColorPickerElem.value;
-
-    bgColorPickerParent.style.backgroundColor = selectedColor;
+    updateBgColorPicker(
+      bgColorPickerElem,
+      bgColorPickerParentElem,
+      selectedColor,
+    );
 
     for (const [key, isSelected] of Object.entries(selected)) {
       if (isSelected) {
@@ -136,7 +158,7 @@ window.addEventListener("load", () => {
       }
     }
 
-    renderKeyboardElem(keyMappings);
+    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
   });
 
   document
@@ -153,7 +175,7 @@ window.addEventListener("load", () => {
         };
       }
 
-      renderKeyboardElem(keyMappings);
+      renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
     });
 
   document.getElementById("rainbow-mode-btn").addEventListener("click", () => {
@@ -172,7 +194,7 @@ window.addEventListener("load", () => {
       bg_color: getRainbowColor(-1),
     };
 
-    renderKeyboardElem(keyMappings);
+    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
   });
 });
 
@@ -196,8 +218,7 @@ const deselectAllKeys = () => {
   }
 };
 
-const renderKeyboardElem = (colorsArr) => {
-  const keyboardElem = document.getElementById("keyboard");
+const renderKeyboardElem = (keyboardElem, colorsArr, handleKeyClick) => {
   keyboardElem.replaceChildren();
   KEYBOARD_LAYOUT.forEach((row, row_idx) => {
     const rowElem = document.createElement("div");
@@ -209,6 +230,7 @@ const renderKeyboardElem = (colorsArr) => {
         key,
         keyColor.text_color,
         keyColor.bg_color,
+        handleKeyClick,
       );
 
       rowElem.appendChild(keyElem);
@@ -221,7 +243,7 @@ const renderKeyboardElem = (colorsArr) => {
   spacebarElem.classList.add("spacebar");
 };
 
-const createKeyElem = (key, textColor, bgColor) => {
+const createKeyElem = (key, textColor, bgColor, handleKeyClick) => {
   const keyElem = document.createElement("div");
   keyElem.className = "key";
   keyElem.setAttribute("data-key", key);
@@ -235,6 +257,8 @@ const createKeyElem = (key, textColor, bgColor) => {
     keyElem.style.borderColor = selected[key]
       ? colors.mainColor
       : colors.backgroundColor;
+
+    handleKeyClick(key);
   });
 
   const letterElem = document.createElement("div");
@@ -244,6 +268,33 @@ const createKeyElem = (key, textColor, bgColor) => {
   keyElem.appendChild(letterElem);
 
   return keyElem;
+};
+
+const updateTextColorPicker = (
+  colorPickerElem,
+  colorPickerIcon,
+  color = null,
+) => {
+  color = color ? color : colors.subColor;
+
+  colorPickerIcon.style.color = color;
+
+  if (colorPickerElem.value != color) {
+    colorPickerElem.value = color;
+  }
+};
+
+const updateBgColorPicker = (
+  colorPickerElem,
+  colorPickerBgElem,
+  color = null,
+) => {
+  color = color ? color : colors.subColor;
+
+  colorPickerBgElem.style.backgroundColor = color;
+  if (colorPickerElem.value != color) {
+    colorPickerElem.value = color;
+  }
 };
 
 const getRainbowColor = (idx) => {
