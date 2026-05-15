@@ -43,13 +43,13 @@ const COLEMAK_LAYOUT = [
   ["spacebar"],
 ];
 
-export const ALL_KEYS = QWERTY_LAYOUT.flat();
-
 export const KEYBOARD_LAYOUTS = {
   qwerty: QWERTY_LAYOUT,
   dvorak: DVORAK_LAYOUT,
   colemak: COLEMAK_LAYOUT,
 };
+
+export const ALL_KEYS = [...new Set(Object.values(KEYBOARD_LAYOUTS).flat(2))];
 
 // colors definitions
 export const BLACK = "#000000";

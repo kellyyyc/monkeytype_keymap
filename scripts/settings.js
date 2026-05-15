@@ -1,4 +1,5 @@
 import { KEYBOARD_LAYOUTS } from "../utils/constants.js";
+import { createDropdown } from "./dropdown.js";
 
 window.addEventListener("load", () => {
   chrome.storage.sync
@@ -32,25 +33,23 @@ window.addEventListener("load", () => {
         chrome.storage.sync.set({ keymap_angle_mod_enabled: false });
       });
 
-      const keyboardLayout = result["keymap_keyboard_layout"] ?? "qwerty";
-      const layoutDropdownElem = document.getElementById(
-        "keyboard-layout-dropdown",
-      );
-      for (const layout of Object.keys(KEYBOARD_LAYOUTS)) {
-        const optionElem = document.createElement("option");
-        optionElem.value = layout;
-        optionElem.textContent = layout;
-        layoutDropdownElem.appendChild(optionElem);
-      }
+      const saveLayout = (layout) => {
+        chrome.storage.sync.set({
+          keymap_keyboard_layout: layout,
+        });
+      };
 
-      layoutDropdownElem.value = KEYBOARD_LAYOUTS[keyboardLayout]
-        ? keyboardLayout
+      const savedLayout = result["keymap_keyboard_layout"] ?? "qwerty";
+      const layoutElem = document.getElementById("keyboard-layout-dropdown");
+      const selectedLayout = KEYBOARD_LAYOUTS[savedLayout]
+        ? savedLayout
         : "qwerty";
 
-      layoutDropdownElem.addEventListener("change", () => {
-        chrome.storage.sync.set({
-          keymap_keyboard_layout: layoutDropdownElem.value,
-        });
+      createDropdown({
+        dropdownElem: layoutElem,
+        options: Object.keys(KEYBOARD_LAYOUTS),
+        selectedValue: selectedLayout,
+        onChange: saveLayout,
       });
     });
 });
