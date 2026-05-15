@@ -1,3 +1,5 @@
+import { KEYBOARD_LAYOUTS } from "../utils/constants.js";
+
 window.addEventListener("load", () => {
   chrome.storage.sync
     .get(["keymap_angle_mod_enabled", "keymap_keyboard_layout"])
@@ -31,5 +33,24 @@ window.addEventListener("load", () => {
       });
 
       const keyboardLayout = result["keymap_keyboard_layout"] ?? "qwerty";
+      const layoutDropdownElem = document.getElementById(
+        "keyboard-layout-dropdown",
+      );
+      for (const layout of Object.keys(KEYBOARD_LAYOUTS)) {
+        const optionElem = document.createElement("option");
+        optionElem.value = layout;
+        optionElem.textContent = layout;
+        layoutDropdownElem.appendChild(optionElem);
+      }
+
+      layoutDropdownElem.value = KEYBOARD_LAYOUTS[keyboardLayout]
+        ? keyboardLayout
+        : "qwerty";
+
+      layoutDropdownElem.addEventListener("change", () => {
+        chrome.storage.sync.set({
+          keymap_keyboard_layout: layoutDropdownElem.value,
+        });
+      });
     });
 });

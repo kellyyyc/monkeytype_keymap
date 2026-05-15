@@ -54,7 +54,7 @@ p {
   margin-left: 20px;
 }
 
-.settings-btn-container {
+.settings-control {
   display: flex;
   gap: 8px;
   width: 40%;
@@ -67,6 +67,25 @@ p {
   font-weight: 500;
 }
 
+.dropdown {
+  width: 100%;
+  height: 40px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 10px;
+
+  background-color: var(--sub-alt-color);
+  color: var(--text-color);
+
+  font: inherit;
+  cursor: pointer;
+}
+
+.dropdown:focus {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+}
+
 @media (max-width: 1023px) {
   .settings-row {
     flex-direction: column;
@@ -77,7 +96,7 @@ p {
     max-width: 100%;
   }
 
-  .settings-btn-container {
+  .settings-control {
     margin-top: 8px;
     width: 100%;
   }

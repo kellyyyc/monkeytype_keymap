@@ -66,6 +66,7 @@
   background-color: var(--sub-alt-color);
 
   cursor: pointer;
+  user-select: none;
 }
 
 .key:hover {
@@ -103,6 +104,8 @@
   width: fit-content;
 
   background-color: var(--sub-alt-color);
+
+  user-select: none;
 }
 
 .control-group > * {

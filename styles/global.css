@@ -42,6 +42,7 @@ button {
   all: unset;
 
   color: var(--sub-color);
+  cursor: pointer;
 }
 
 a {
@@ -50,8 +51,8 @@ a {
 }
 
 a:hover {
-  cursor: pointer;
   color: var(--text-color);
+  cursor: pointer;
 }
 
 a:active {
@@ -90,7 +91,8 @@ a:active {
 
   font-size: 1rem;
   font-weight: 500;
-  cursor: pointer;
+
+  user-select: none;
 }
 
 .toggle-btn.active-btn {
@@ -105,7 +107,11 @@ a:active {
 
 .toggle-btn:active {
   background-color: var(--sub-color);
-  color: var(--background-color);
+}
+
+.toggle-btn:focus {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
 }
 
 .icon {
@@ -116,6 +122,7 @@ a:active {
 .logo {
   height: 24px;
   padding-top: 4px;
+  user-select: none;
 }
 
 .btn {
