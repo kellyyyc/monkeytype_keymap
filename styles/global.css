@@ -42,6 +42,7 @@ button {
   all: unset;
 
   color: var(--sub-color);
+  cursor: pointer;
 }
 
 a {
@@ -50,8 +51,8 @@ a {
 }
 
 a:hover {
-  cursor: pointer;
   color: var(--text-color);
+  cursor: pointer;
 }
 
 a:active {
@@ -70,9 +71,58 @@ a:active {
   align-items: center;
 }
 
+.toggle-btn-container {
+  display: flex;
+  gap: 8px;
+}
+
+.toggle-btn {
+  display: flex;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: center;
+  height: 32px;
+  min-width: 64px;
+  padding: 0 20px;
+  border-radius: 10px;
+
+  background-color: var(--sub-alt-color);
+  color: var(--text-color);
+
+  font-size: 1rem;
+  font-weight: 500;
+
+  user-select: none;
+}
+
+.toggle-btn.active-btn {
+  background-color: var(--main-color);
+  color: var(--background-color);
+}
+
+.toggle-btn:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
+.toggle-btn:active {
+  background-color: var(--sub-color);
+}
+
+.toggle-btn:focus {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
+}
+
 .icon {
+  height: 32px;
+  width: 32px;
+}
+
+.logo {
   height: 24px;
   padding-top: 4px;
+  user-select: none;
 }
 
 .btn {

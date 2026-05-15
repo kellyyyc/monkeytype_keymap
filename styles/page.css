@@ -24,11 +24,26 @@ p {
 }
 
 .page-content {
-  max-width: 50%;
   display: flex;
   flex-direction: column;
   gap: 24px;
   margin-top: 60px;
+}
+
+.settings-group {
+  max-width: 75%;
+  margin-bottom: 16px;
+}
+
+.settings-row {
+  display: flex;
+
+  justify-content: space-between;
+  align-items: center;
+}
+
+.content-block {
+  max-width: 50%;
 }
 
 .steps {
@@ -37,4 +52,33 @@ p {
 
 .note {
   margin-left: 20px;
+}
+
+.settings-control {
+  display: flex;
+  gap: 8px;
+  width: 40%;
+}
+
+.settings-btn {
+  padding: 12px;
+  height: 40px;
+  flex: 1;
+  font-weight: 500;
+}
+
+@media (max-width: 1023px) {
+  .settings-row {
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .content-block {
+    max-width: 100%;
+  }
+
+  .settings-control {
+    margin-top: 8px;
+    width: 100%;
+  }
 }
