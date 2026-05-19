@@ -22,9 +22,9 @@ for (const [key, cssVar] of Object.entries(cssVars)) {
 }
 
 const selected = {};
+let isExtensionEnabled = false;
 let keyMappings = {};
 let selectedKeyboardLayout = "qwerty";
-let isExtensionEnabled = false;
 let isAngleModEnabled = false;
 
 window.addEventListener("load", () => {
@@ -61,15 +61,15 @@ window.addEventListener("load", () => {
   chrome.storage.sync
     .get([
       "keymap_enabled",
+      "keymap_keys",
       "keymap_keyboard_layout",
       "keymap_angle_mod_enabled",
-      "keymap_keys",
     ])
     .then((result) => {
+      isExtensionEnabled = result["keymap_enabled"] ?? false;
       keyMappings = result["keymap_keys"] ?? {};
       selectedKeyboardLayout = result["keymap_keyboard_layout"] ?? "qwerty";
       isAngleModEnabled = result["keymap_angle_mod_enabled"] ?? false;
-      isExtensionEnabled = result["keymap_enabled"] ?? false;
 
       for (const key of ALL_KEYS) {
         if (!keyMappings[key]) {
@@ -193,27 +193,33 @@ window.addEventListener("load", () => {
 
     renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
   });
+
+  const selectAllKeys = () => {
+    for (const key in selected) {
+      selected[key] = true;
+    }
+
+    for (const elem of document.getElementsByClassName("key")) {
+      elem.style.borderColor = colors.mainColor;
+    }
+
+    updateTextPicker(textPickerElem, textPickerIcon);
+    updateBgPicker(bgPickerElem, bgPickerParentElem);
+  };
+
+  const deselectAllKeys = () => {
+    for (const key in selected) {
+      selected[key] = false;
+    }
+
+    for (const elem of document.getElementsByClassName("key")) {
+      elem.style.borderColor = colors.backgroundColor;
+    }
+
+    updateTextPicker(textPickerElem, textPickerIcon);
+    updateBgPicker(bgPickerElem, bgPickerParentElem);
+  };
 });
-
-const selectAllKeys = () => {
-  for (const key in selected) {
-    selected[key] = true;
-  }
-
-  for (const elem of document.getElementsByClassName("key")) {
-    elem.style.borderColor = colors.mainColor;
-  }
-};
-
-const deselectAllKeys = () => {
-  for (const key in selected) {
-    selected[key] = false;
-  }
-
-  for (const elem of document.getElementsByClassName("key")) {
-    elem.style.borderColor = colors.backgroundColor;
-  }
-};
 
 const renderKeyboardElem = (keyboardElem, colorsArr, handleKeyClick) => {
   keyboardElem.replaceChildren();
