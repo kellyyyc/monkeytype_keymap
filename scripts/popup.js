@@ -51,10 +51,9 @@ window.addEventListener("load", () => {
     const selectedCount = Object.values(selected).filter(Boolean).length;
     const keyColor = keyMappings[key];
 
-    const selectedTextColor = selectedCount === 1 ? keyColor.text_color : null;
-    const selectedBgColor = selectedCount === 1 ? keyColor.bg_color : null;
-
+    const selectedTextColor = getSelectedColor("text_color");
     updateTextPicker(textPickerElem, textPickerInput, selectedTextColor);
+    const selectedBgColor = getSelectedColor("bg_color");
     updateBgPicker(bgPickerElem, bgPickerInput, selectedBgColor);
   };
 
@@ -201,8 +200,10 @@ window.addEventListener("load", () => {
       elem.style.borderColor = colors.mainColor;
     }
 
-    updateTextPicker(textPickerElem, textPickerInput);
-    updateBgPicker(bgPickerElem, bgPickerInput);
+    const selectedTextColor = getSelectedColor("text_color");
+    updateTextPicker(textPickerElem, textPickerInput, selectedTextColor);
+    const selectedBgColor = getSelectedColor("bg_color");
+    updateBgPicker(bgPickerElem, bgPickerInput, selectedBgColor);
   };
 
   const deselectAllKeys = () => {
@@ -333,4 +334,27 @@ const isNoneSelected = () => {
   }
 
   return true;
+};
+
+const getSelectedColor = (colorType) => {
+  let selectedColor = null;
+
+  for (const key in keyMappings) {
+    if (!selected[key]) {
+      continue;
+    }
+
+    const color = keyMappings[key][colorType];
+
+    if (selectedColor === null) {
+      selectedColor = color;
+      continue;
+    }
+
+    if (selectedColor !== color) {
+      return null;
+    }
+  }
+
+  return selectedColor;
 };
