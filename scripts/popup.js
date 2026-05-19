@@ -1,11 +1,11 @@
-import {
+const {
   DEFAULT_LAYOUT,
   ANGLE_MOD_LAYOUT,
   ALL_KEYS,
   KEYBOARD_LAYOUTS,
   BLACK,
   RAINBOW_COLORS,
-} from "../utils/constants.js";
+} = globalThis.KEYMAP_CONSTANTS;
 
 const styles = getComputedStyle(document.documentElement);
 

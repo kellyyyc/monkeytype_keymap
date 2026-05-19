@@ -1,8 +1,7 @@
-import {
-  ALL_KEYS,
-  DEFAULT_TEXT_COLOR,
-  DEFAULT_BG_COLOR,
-} from "../utils/constants.js";
+importScripts("../utils/constants.js");
+
+const { ALL_KEYS, DEFAULT_TEXT_COLOR, DEFAULT_BG_COLOR } =
+  globalThis.KEYMAP_CONSTANTS;
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.sync.get(

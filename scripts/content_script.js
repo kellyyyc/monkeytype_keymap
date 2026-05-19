@@ -1,5 +1,4 @@
-const DARK_GRAY = "#111111";
-const WHITE = "#ffffff";
+const { DARK_GRAY, WHITE } = globalThis.KEYMAP_CONSTANTS;
 
 const FRAME_DELAY = 5;
 const MAX_RGB_VALUE = 0xff;

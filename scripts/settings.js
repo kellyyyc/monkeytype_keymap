@@ -1,5 +1,6 @@
-import { KEYBOARD_LAYOUTS } from "../utils/constants.js";
 import { createDropdown } from "./dropdown.js";
+
+const { KEYBOARD_LAYOUTS } = globalThis.KEYMAP_CONSTANTS;
 
 window.addEventListener("load", () => {
   chrome.storage.sync
