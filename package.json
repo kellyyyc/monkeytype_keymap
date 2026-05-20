@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "clean": "rm -rf build monkeytype-keymap.zip",
+    "build": "npm run clean && mkdir -p build && cp -r manifest.json popup.html icons pages scripts styles utils build/",
+    "zip": "npm run build && cd build && zip -r ../monkeytype-keymap.zip ."
+  }
+}
