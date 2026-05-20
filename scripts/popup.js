@@ -29,31 +29,31 @@ let isAngleModEnabled = false;
 
 window.addEventListener("load", () => {
   const keyboardElem = document.getElementById("keyboard");
+
   const textPickerElem = document.getElementById("text-color-picker");
   const textPickerInput = textPickerElem.querySelector("input");
   const bgPickerElem = document.getElementById("bg-color-picker");
   const bgPickerInput = bgPickerElem.querySelector("input");
 
-  for (const linkElem of document.querySelectorAll("[data-extension-page]")) {
-    linkElem.addEventListener("click", (event) => {
-      event.preventDefault();
-      chrome.tabs.create({
-        url: chrome.runtime.getURL(linkElem.dataset.extensionPage),
-      });
-    });
-  }
+  const toggleOnElem = document.getElementById("enable-extension-btn");
+  const toggleOffElem = document.getElementById("disable-extension-btn");
 
-  for (const key of ALL_KEYS) {
-    selected[key] = false;
-  }
+  const refreshColorPickers = () => {
+    updateTextPicker(
+      textPickerElem,
+      textPickerInput,
+      getSelectedColor("text_color"),
+    );
 
-  const handleKeyClick = (key) => {
-    const selectedTextColor = getSelectedColor("text_color");
-    updateTextPicker(textPickerElem, textPickerInput, selectedTextColor);
-
-    const selectedBgColor = getSelectedColor("bg_color");
-    updateBgPicker(bgPickerElem, bgPickerInput, selectedBgColor);
+    updateBgPicker(bgPickerElem, bgPickerInput, getSelectedColor("bg_color"));
   };
+
+  const renderKeyboard = () => {
+    renderKeyboardElem(keyboardElem, keyMappings, refreshColorPickers);
+  };
+
+  setupPageLinks();
+  initialiseSelectedKeys();
 
   chrome.storage.sync
     .get([
@@ -68,26 +68,15 @@ window.addEventListener("load", () => {
       selectedKeyboardLayout = result["keymap_keyboard_layout"] ?? "qwerty";
       isAngleModEnabled = result["keymap_angle_mod_enabled"] ?? false;
 
-      for (const key of ALL_KEYS) {
-        if (!keyMappings[key]) {
-          keyMappings[key] = getDefaultKeyMapping();
-        }
-      }
+      fillMissingKeyMappings();
+      renderKeyboard();
 
-      renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
-
-      const toggleOnElem = document.getElementById("enable-extension-btn");
-      const toggleOffElem = document.getElementById("disable-extension-btn");
-      if (isExtensionEnabled) {
-        toggleOnElem.classList.add("active-btn");
-        keyboardElem.classList.remove("disabled");
-      } else {
-        toggleOffElem.classList.add("active-btn");
-        keyboardElem.classList.add("disabled");
-      }
+      updateExtensionToggle(keyboardElem, toggleOnElem, toggleOffElem);
+      refreshColorPickers();
 
       toggleOnElem.addEventListener("click", () => {
         isExtensionEnabled = true;
+
         toggleOffElem.classList.remove("active-btn");
         toggleOnElem.classList.add("active-btn");
         keyboardElem.classList.remove("disabled");
@@ -97,11 +86,13 @@ window.addEventListener("load", () => {
 
       toggleOffElem.addEventListener("click", () => {
         isExtensionEnabled = false;
+
         toggleOnElem.classList.remove("active-btn");
         toggleOffElem.classList.add("active-btn");
         keyboardElem.classList.add("disabled");
 
         deselectAllKeys();
+        refreshColorPickers();
 
         chrome.storage.sync.set({ keymap_enabled: false });
       });
@@ -119,6 +110,7 @@ window.addEventListener("load", () => {
     }
 
     selectAllKeys();
+    refreshColorPickers();
   });
 
   document
@@ -129,34 +121,25 @@ window.addEventListener("load", () => {
       }
 
       deselectAllKeys();
+      refreshColorPickers();
     });
 
-  updateTextPicker(textPickerElem, textPickerInput);
   textPickerInput.addEventListener("input", () => {
     const selectedColor = textPickerInput.value;
+
+    updateSelectedKeysColor("text_color", selectedColor);
     updateTextPicker(textPickerElem, textPickerInput, selectedColor);
 
-    for (const [key, isSelected] of Object.entries(selected)) {
-      if (isSelected) {
-        keyMappings[key].text_color = selectedColor;
-      }
-    }
-
-    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
+    renderKeyboard();
   });
 
-  updateBgPicker(bgPickerElem, bgPickerInput);
   bgPickerInput.addEventListener("input", () => {
     const selectedColor = bgPickerInput.value;
+
+    updateSelectedKeysColor("bg_color", selectedColor);
     updateBgPicker(bgPickerElem, bgPickerInput, selectedColor);
 
-    for (const [key, isSelected] of Object.entries(selected)) {
-      if (isSelected) {
-        keyMappings[key].bg_color = selectedColor;
-      }
-    }
-
-    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
+    renderKeyboard();
   });
 
   document.getElementById("reset-options-btn").addEventListener("click", () => {
@@ -168,7 +151,8 @@ window.addEventListener("load", () => {
       keyMappings[key] = getDefaultKeyMapping();
     }
 
-    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
+    renderKeyboard();
+    refreshColorPickers();
   });
 
   document.getElementById("rainbow-mode-btn").addEventListener("click", () => {
@@ -186,39 +170,84 @@ window.addEventListener("load", () => {
       }
     });
 
-    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
+    renderKeyboard();
+    refreshColorPickers();
   });
-
-  const selectAllKeys = () => {
-    for (const key in selected) {
-      selected[key] = true;
-    }
-
-    for (const elem of document.getElementsByClassName("key")) {
-      elem.style.borderColor = colors.mainColor;
-    }
-
-    const selectedTextColor = getSelectedColor("text_color");
-    updateTextPicker(textPickerElem, textPickerInput, selectedTextColor);
-    const selectedBgColor = getSelectedColor("bg_color");
-    updateBgPicker(bgPickerElem, bgPickerInput, selectedBgColor);
-  };
-
-  const deselectAllKeys = () => {
-    for (const key in selected) {
-      selected[key] = false;
-    }
-
-    for (const elem of document.getElementsByClassName("key")) {
-      elem.style.borderColor = colors.backgroundColor;
-    }
-
-    updateTextPicker(textPickerElem, textPickerInput);
-    updateBgPicker(bgPickerElem, bgPickerInput);
-  };
 });
 
-const renderKeyboardElem = (keyboardElem, colorsArr, handleKeyClick) => {
+const setupPageLinks = () => {
+  for (const linkElem of document.querySelectorAll("[data-extension-page]")) {
+    linkElem.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      chrome.tabs.create({
+        url: chrome.runtime.getURL(linkElem.dataset.extensionPage),
+      });
+    });
+  }
+};
+
+const initialiseSelectedKeys = () => {
+  for (const key of ALL_KEYS) {
+    selected[key] = false;
+  }
+};
+
+const fillMissingKeyMappings = () => {
+  for (const key of ALL_KEYS) {
+    if (!keyMappings[key]) {
+      keyMappings[key] = getDefaultKeyMapping();
+    }
+  }
+};
+
+const updateExtensionToggle = (keyboardElem, toggleOnElem, toggleOffElem) => {
+  if (isExtensionEnabled) {
+    toggleOnElem.classList.add("active-btn");
+    toggleOffElem.classList.remove("active-btn");
+    keyboardElem.classList.remove("disabled");
+  } else {
+    toggleOffElem.classList.add("active-btn");
+    toggleOnElem.classList.remove("active-btn");
+    keyboardElem.classList.add("disabled");
+  }
+};
+
+const updateSelectedKeysColor = (colorType, color) => {
+  for (const [key, isSelected] of Object.entries(selected)) {
+    if (isSelected) {
+      keyMappings[key][colorType] = color;
+    }
+  }
+};
+
+const selectAllKeys = () => {
+  for (const key in selected) {
+    selected[key] = true;
+  }
+
+  updateKeySelectionBorders();
+};
+
+const deselectAllKeys = () => {
+  for (const key in selected) {
+    selected[key] = false;
+  }
+
+  updateKeySelectionBorders();
+};
+
+const updateKeySelectionBorders = () => {
+  for (const keyElem of document.getElementsByClassName("key")) {
+    const key = keyElem.dataset.key;
+
+    keyElem.style.borderColor = selected[key]
+      ? colors.mainColor
+      : colors.backgroundColor;
+  }
+};
+
+const renderKeyboardElem = (keyboardElem, keyMappings, handleKeyClick) => {
   keyboardElem.replaceChildren();
   const keyboardLayout =
     KEYBOARD_LAYOUTS[selectedKeyboardLayout] ?? KEYBOARD_LAYOUTS.qwerty;
@@ -228,7 +257,7 @@ const renderKeyboardElem = (keyboardElem, colorsArr, handleKeyClick) => {
     rowElem.className = "row";
     rowElem.id = "row-" + rowIdx;
     for (const key of row) {
-      const keyColor = colorsArr[key] ?? getDefaultKeyMapping();
+      const keyColor = keyMappings[key] ?? getDefaultKeyMapping();
       const keyElem = createKeyElem(
         key,
         keyColor.text_color,
@@ -242,8 +271,8 @@ const renderKeyboardElem = (keyboardElem, colorsArr, handleKeyClick) => {
     keyboardElem.appendChild(rowElem);
   });
 
-  const spacebarElem = document.querySelector('[data-key="spacebar"]');
-  spacebarElem.classList.add("spacebar");
+  const spacebarElem = keyboardElem.querySelector('[data-key="spacebar"]');
+  spacebarElem?.classList.add("spacebar");
 };
 
 const createKeyElem = (key, textColor, bgColor, handleKeyClick) => {
@@ -261,7 +290,7 @@ const createKeyElem = (key, textColor, bgColor, handleKeyClick) => {
       ? colors.mainColor
       : colors.backgroundColor;
 
-    handleKeyClick(key);
+    handleKeyClick();
   });
 
   const letterElem = document.createElement("div");
@@ -280,16 +309,15 @@ const updateTextPicker = (textPickerElem, textPickerInput, color = null) => {
     textPickerIcon.style.color = colors.subColor;
     textPickerElem.classList.add("disabled");
     return;
-  } else {
-    textPickerElem.classList.remove("disabled");
   }
 
-  color = color ?? colors.subColor;
+  textPickerElem.classList.remove("disabled");
 
-  textPickerIcon.style.color = color;
+  const pickerColor = color ?? colors.subColor;
+  textPickerIcon.style.color = pickerColor;
 
-  if (textPickerInput.value !== color) {
-    textPickerInput.value = color;
+  if (textPickerInput.value !== pickerColor) {
+    textPickerInput.value = pickerColor;
   }
 };
 
@@ -298,15 +326,15 @@ const updateBgPicker = (bgPickerElem, bgPickerInput, color = null) => {
     bgPickerElem.style.backgroundColor = colors.subColor;
     bgPickerElem.classList.add("disabled");
     return;
-  } else {
-    bgPickerElem.classList.remove("disabled");
   }
 
-  color = color ?? colors.subColor;
+  bgPickerElem.classList.remove("disabled");
 
-  bgPickerElem.style.backgroundColor = color;
-  if (bgPickerInput.value !== color) {
-    bgPickerInput.value = color;
+  const pickerColor = color ?? colors.subColor;
+  bgPickerElem.style.backgroundColor = pickerColor;
+
+  if (bgPickerInput.value !== pickerColor) {
+    bgPickerInput.value = pickerColor;
   }
 };
 
@@ -342,7 +370,7 @@ const getSelectedColor = (colorType) => {
       continue;
     }
 
-    const color = keyMappings[key][colorType];
+    const color = keyMappings[key]?.[colorType];
 
     if (selectedColor === null) {
       selectedColor = color;
