@@ -52,14 +52,7 @@ window.addEventListener("load", () => {
     renderKeyboardElem(keyboardElem, keyMappings, refreshColorPickers);
   };
 
-  for (const linkElem of document.querySelectorAll("[data-extension-page]")) {
-    linkElem.addEventListener("click", (event) => {
-      event.preventDefault();
-      chrome.tabs.create({
-        url: chrome.runtime.getURL(linkElem.dataset.extensionPage),
-      });
-    });
-  }
+  setupPageLinks();
 
   for (const key of ALL_KEYS) {
     selected[key] = false;
@@ -225,6 +218,18 @@ window.addEventListener("load", () => {
     updateBgPicker(bgPickerElem, bgPickerInput);
   };
 });
+
+const setupPageLinks = () => {
+  for (const linkElem of document.querySelectorAll("[data-extension-page]")) {
+    linkElem.addEventListener("click", (event) => {
+      event.preventDefault();
+
+      chrome.tabs.create({
+        url: chrome.runtime.getURL(linkElem.dataset.extensionPage),
+      });
+    });
+  }
+};
 
 const renderKeyboardElem = (keyboardElem, keyMappings, handleKeyClick) => {
   keyboardElem.replaceChildren();
