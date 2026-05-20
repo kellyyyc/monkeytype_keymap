@@ -53,10 +53,7 @@ window.addEventListener("load", () => {
   };
 
   setupPageLinks();
-
-  for (const key of ALL_KEYS) {
-    selected[key] = false;
-  }
+  initialiseSelectedKeys();
 
   chrome.storage.sync
     .get([
@@ -228,6 +225,12 @@ const setupPageLinks = () => {
         url: chrome.runtime.getURL(linkElem.dataset.extensionPage),
       });
     });
+  }
+};
+
+const initialiseSelectedKeys = () => {
+  for (const key of ALL_KEYS) {
+    selected[key] = false;
   }
 };
 
