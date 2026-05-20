@@ -272,7 +272,7 @@ const renderKeyboardElem = (keyboardElem, keyMappings, handleKeyClick) => {
   });
 
   const spacebarElem = keyboardElem.querySelector('[data-key="spacebar"]');
-  spacebarElem.classList.add("spacebar");
+  spacebarElem?.classList.add("spacebar");
 };
 
 const createKeyElem = (key, textColor, bgColor, handleKeyClick) => {
@@ -370,7 +370,7 @@ const getSelectedColor = (colorType) => {
       continue;
     }
 
-    const color = keyMappings[key][colorType];
+    const color = keyMappings[key]?.[colorType];
 
     if (selectedColor === null) {
       selectedColor = color;
