@@ -271,7 +271,7 @@ const renderKeyboardElem = (keyboardElem, keyMappings, handleKeyClick) => {
     keyboardElem.appendChild(rowElem);
   });
 
-  const spacebarElem = document.querySelector('[data-key="spacebar"]');
+  const spacebarElem = keyboardElem.querySelector('[data-key="spacebar"]');
   spacebarElem.classList.add("spacebar");
 };
 
