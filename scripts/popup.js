@@ -290,7 +290,7 @@ const createKeyElem = (key, textColor, bgColor, handleKeyClick) => {
       ? colors.mainColor
       : colors.backgroundColor;
 
-    handleKeyClick(key);
+    handleKeyClick();
   });
 
   const letterElem = document.createElement("div");
