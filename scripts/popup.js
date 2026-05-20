@@ -34,6 +34,20 @@ window.addEventListener("load", () => {
   const bgPickerElem = document.getElementById("bg-color-picker");
   const bgPickerInput = bgPickerElem.querySelector("input");
 
+  const refreshColorPickers = () => {
+    updateTextPicker(
+      textPickerElem,
+      textPickerInput,
+      getSelectedColor("text_color"),
+    );
+
+    updateBgPicker(bgPickerElem, bgPickerInput, getSelectedColor("bg_color"));
+  };
+
+  const renderKeyboard = () => {
+    renderKeyboardElem(keyboardElem, keyMappings, refreshColorPickers);
+  };
+
   for (const linkElem of document.querySelectorAll("[data-extension-page]")) {
     linkElem.addEventListener("click", (event) => {
       event.preventDefault();
@@ -74,7 +88,7 @@ window.addEventListener("load", () => {
         }
       }
 
-      renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
+      renderKeyboard();
 
       const toggleOnElem = document.getElementById("enable-extension-btn");
       const toggleOffElem = document.getElementById("disable-extension-btn");
@@ -142,7 +156,7 @@ window.addEventListener("load", () => {
       }
     }
 
-    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
+    renderKeyboard();
   });
 
   updateBgPicker(bgPickerElem, bgPickerInput);
@@ -156,7 +170,7 @@ window.addEventListener("load", () => {
       }
     }
 
-    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
+    renderKeyboard();
   });
 
   document.getElementById("reset-options-btn").addEventListener("click", () => {
@@ -168,7 +182,7 @@ window.addEventListener("load", () => {
       keyMappings[key] = getDefaultKeyMapping();
     }
 
-    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
+    renderKeyboard();
   });
 
   document.getElementById("rainbow-mode-btn").addEventListener("click", () => {
@@ -186,7 +200,7 @@ window.addEventListener("load", () => {
       }
     });
 
-    renderKeyboardElem(keyboardElem, keyMappings, handleKeyClick);
+    renderKeyboard();
   });
 
   const selectAllKeys = () => {
