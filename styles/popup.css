@@ -166,7 +166,7 @@
   top: 6px;
   left: 6px;
 
-  color: var(--sub-alt-color);
+  color: var(--background-color);
 
   pointer-events: none;
 }
