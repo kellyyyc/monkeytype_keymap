@@ -74,6 +74,7 @@ window.addEventListener("load", () => {
       updateExtensionToggle(keyboardElem, toggleOnElem, toggleOffElem);
       toggleOnElem.addEventListener("click", () => {
         isExtensionEnabled = true;
+
         toggleOffElem.classList.remove("active-btn");
         toggleOnElem.classList.add("active-btn");
         keyboardElem.classList.remove("disabled");
@@ -83,11 +84,13 @@ window.addEventListener("load", () => {
 
       toggleOffElem.addEventListener("click", () => {
         isExtensionEnabled = false;
+
         toggleOnElem.classList.remove("active-btn");
         toggleOffElem.classList.add("active-btn");
         keyboardElem.classList.add("disabled");
 
         deselectAllKeys();
+        refreshColorPickers();
 
         chrome.storage.sync.set({ keymap_enabled: false });
       });
@@ -105,6 +108,7 @@ window.addEventListener("load", () => {
     }
 
     selectAllKeys();
+    refreshColorPickers();
   });
 
   document
@@ -115,6 +119,7 @@ window.addEventListener("load", () => {
       }
 
       deselectAllKeys();
+      refreshColorPickers();
     });
 
   updateTextPicker(textPickerElem, textPickerInput);
@@ -155,6 +160,7 @@ window.addEventListener("load", () => {
     }
 
     renderKeyboard();
+    refreshColorPickers();
   });
 
   document.getElementById("rainbow-mode-btn").addEventListener("click", () => {
@@ -173,6 +179,7 @@ window.addEventListener("load", () => {
     });
 
     renderKeyboard();
+    refreshColorPickers();
   });
 
   const selectAllKeys = () => {
@@ -183,11 +190,6 @@ window.addEventListener("load", () => {
     for (const elem of document.getElementsByClassName("key")) {
       elem.style.borderColor = colors.mainColor;
     }
-
-    const selectedTextColor = getSelectedColor("text_color");
-    updateTextPicker(textPickerElem, textPickerInput, selectedTextColor);
-    const selectedBgColor = getSelectedColor("bg_color");
-    updateBgPicker(bgPickerElem, bgPickerInput, selectedBgColor);
   };
 
   const deselectAllKeys = () => {
@@ -198,9 +200,6 @@ window.addEventListener("load", () => {
     for (const elem of document.getElementsByClassName("key")) {
       elem.style.borderColor = colors.backgroundColor;
     }
-
-    updateTextPicker(textPickerElem, textPickerInput);
-    updateBgPicker(bgPickerElem, bgPickerInput);
   };
 });
 
