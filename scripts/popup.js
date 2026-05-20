@@ -29,10 +29,14 @@ let isAngleModEnabled = false;
 
 window.addEventListener("load", () => {
   const keyboardElem = document.getElementById("keyboard");
+
   const textPickerElem = document.getElementById("text-color-picker");
   const textPickerInput = textPickerElem.querySelector("input");
   const bgPickerElem = document.getElementById("bg-color-picker");
   const bgPickerInput = bgPickerElem.querySelector("input");
+
+  const toggleOnElem = document.getElementById("enable-extension-btn");
+  const toggleOffElem = document.getElementById("disable-extension-btn");
 
   const refreshColorPickers = () => {
     updateTextPicker(
@@ -61,14 +65,6 @@ window.addEventListener("load", () => {
     selected[key] = false;
   }
 
-  const handleKeyClick = (key) => {
-    const selectedTextColor = getSelectedColor("text_color");
-    updateTextPicker(textPickerElem, textPickerInput, selectedTextColor);
-
-    const selectedBgColor = getSelectedColor("bg_color");
-    updateBgPicker(bgPickerElem, bgPickerInput, selectedBgColor);
-  };
-
   chrome.storage.sync
     .get([
       "keymap_enabled",
@@ -90,8 +86,6 @@ window.addEventListener("load", () => {
 
       renderKeyboard();
 
-      const toggleOnElem = document.getElementById("enable-extension-btn");
-      const toggleOffElem = document.getElementById("disable-extension-btn");
       if (isExtensionEnabled) {
         toggleOnElem.classList.add("active-btn");
         keyboardElem.classList.remove("disabled");
@@ -232,7 +226,7 @@ window.addEventListener("load", () => {
   };
 });
 
-const renderKeyboardElem = (keyboardElem, colorsArr, handleKeyClick) => {
+const renderKeyboardElem = (keyboardElem, keyMappings, handleKeyClick) => {
   keyboardElem.replaceChildren();
   const keyboardLayout =
     KEYBOARD_LAYOUTS[selectedKeyboardLayout] ?? KEYBOARD_LAYOUTS.qwerty;
@@ -242,7 +236,7 @@ const renderKeyboardElem = (keyboardElem, colorsArr, handleKeyClick) => {
     rowElem.className = "row";
     rowElem.id = "row-" + rowIdx;
     for (const key of row) {
-      const keyColor = colorsArr[key] ?? getDefaultKeyMapping();
+      const keyColor = keyMappings[key] ?? getDefaultKeyMapping();
       const keyElem = createKeyElem(
         key,
         keyColor.text_color,
