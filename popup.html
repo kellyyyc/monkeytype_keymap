@@ -4,7 +4,8 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="styles/global.css" />
     <link rel="stylesheet" href="styles/popup.css" />
-    <script type="module" src="scripts/popup.js"></script>
+    <script src="utils/constants.js" defer></script>
+    <script src="scripts/popup.js" defer></script>
   </head>
 
   <body class="popup-body">
@@ -40,13 +41,8 @@
           <div class="color-controls">
             <div class="color-setting">
               <label for="text-color-picker">Text color</label>
-              <div class="color-picker-wrapper">
-                <input
-                  id="text-color-picker"
-                  class="color-picker"
-                  type="color"
-                  value="#000000"
-                />
+              <div id="text-color-picker" class="color-picker-wrapper disabled">
+                <input class="color-picker" type="color" value="#000000" />
                 <svg
                   class="color-picker-icon"
                   xmlns="http://www.w3.org/2000/svg"
@@ -62,13 +58,8 @@
             </div>
             <div class="color-setting">
               <label for="bg-color-picker">Background color</label>
-              <div class="color-picker-wrapper">
-                <input
-                  id="bg-color-picker"
-                  class="color-picker"
-                  type="color"
-                  value="#000000"
-                />
+              <div id="bg-color-picker" class="color-picker-wrapper disabled">
+                <input class="color-picker" type="color" value="#000000" />
                 <svg
                   class="color-picker-icon"
                   xmlns="http://www.w3.org/2000/svg"
