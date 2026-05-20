@@ -68,12 +68,7 @@ window.addEventListener("load", () => {
       selectedKeyboardLayout = result["keymap_keyboard_layout"] ?? "qwerty";
       isAngleModEnabled = result["keymap_angle_mod_enabled"] ?? false;
 
-      for (const key of ALL_KEYS) {
-        if (!keyMappings[key]) {
-          keyMappings[key] = getDefaultKeyMapping();
-        }
-      }
-
+      fillMissingKeyMappings();
       renderKeyboard();
 
       if (isExtensionEnabled) {
@@ -231,6 +226,14 @@ const setupPageLinks = () => {
 const initialiseSelectedKeys = () => {
   for (const key of ALL_KEYS) {
     selected[key] = false;
+  }
+};
+
+const fillMissingKeyMappings = () => {
+  for (const key of ALL_KEYS) {
+    if (!keyMappings[key]) {
+      keyMappings[key] = getDefaultKeyMapping();
+    }
   }
 };
 
