@@ -72,6 +72,8 @@ window.addEventListener("load", () => {
       renderKeyboard();
 
       updateExtensionToggle(keyboardElem, toggleOnElem, toggleOffElem);
+      refreshColorPickers();
+
       toggleOnElem.addEventListener("click", () => {
         isExtensionEnabled = true;
 
@@ -122,30 +124,20 @@ window.addEventListener("load", () => {
       refreshColorPickers();
     });
 
-  updateTextPicker(textPickerElem, textPickerInput);
   textPickerInput.addEventListener("input", () => {
     const selectedColor = textPickerInput.value;
-    updateTextPicker(textPickerElem, textPickerInput, selectedColor);
 
-    for (const [key, isSelected] of Object.entries(selected)) {
-      if (isSelected) {
-        keyMappings[key].text_color = selectedColor;
-      }
-    }
+    updateSelectedKeysColor("text_color", selectedColor);
+    updateTextPicker(textPickerElem, textPickerInput, selectedColor);
 
     renderKeyboard();
   });
 
-  updateBgPicker(bgPickerElem, bgPickerInput);
   bgPickerInput.addEventListener("input", () => {
     const selectedColor = bgPickerInput.value;
-    updateBgPicker(bgPickerElem, bgPickerInput, selectedColor);
 
-    for (const [key, isSelected] of Object.entries(selected)) {
-      if (isSelected) {
-        keyMappings[key].bg_color = selectedColor;
-      }
-    }
+    updateSelectedKeysColor("bg_color", selectedColor);
+    updateBgPicker(bgPickerElem, bgPickerInput, selectedColor);
 
     renderKeyboard();
   });
@@ -238,6 +230,14 @@ const updateExtensionToggle = (keyboardElem, toggleOnElem, toggleOffElem) => {
     toggleOffElem.classList.add("active-btn");
     toggleOnElem.classList.remove("active-btn");
     keyboardElem.classList.add("disabled");
+  }
+};
+
+const updateSelectedKeysColor = (colorType, color) => {
+  for (const [key, isSelected] of Object.entries(selected)) {
+    if (isSelected) {
+      keyMappings[key][colorType] = color;
+    }
   }
 };
 
