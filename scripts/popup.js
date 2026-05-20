@@ -309,16 +309,15 @@ const updateTextPicker = (textPickerElem, textPickerInput, color = null) => {
     textPickerIcon.style.color = colors.subColor;
     textPickerElem.classList.add("disabled");
     return;
-  } else {
-    textPickerElem.classList.remove("disabled");
   }
 
-  color = color ?? colors.subColor;
+  textPickerElem.classList.remove("disabled");
 
-  textPickerIcon.style.color = color;
+  const pickerColor = color ?? colors.subColor;
+  textPickerIcon.style.color = pickerColor;
 
-  if (textPickerInput.value !== color) {
-    textPickerInput.value = color;
+  if (textPickerInput.value !== pickerColor) {
+    textPickerInput.value = pickerColor;
   }
 };
 
@@ -327,15 +326,15 @@ const updateBgPicker = (bgPickerElem, bgPickerInput, color = null) => {
     bgPickerElem.style.backgroundColor = colors.subColor;
     bgPickerElem.classList.add("disabled");
     return;
-  } else {
-    bgPickerElem.classList.remove("disabled");
   }
 
-  color = color ?? colors.subColor;
+  bgPickerElem.classList.remove("disabled");
 
-  bgPickerElem.style.backgroundColor = color;
-  if (bgPickerInput.value !== color) {
-    bgPickerInput.value = color;
+  const pickerColor = color ?? colors.subColor;
+  bgPickerElem.style.backgroundColor = pickerColor;
+
+  if (bgPickerInput.value !== pickerColor) {
+    bgPickerInput.value = pickerColor;
   }
 };
 
