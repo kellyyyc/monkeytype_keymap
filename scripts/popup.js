@@ -48,11 +48,9 @@ window.addEventListener("load", () => {
   }
 
   const handleKeyClick = (key) => {
-    const selectedCount = Object.values(selected).filter(Boolean).length;
-    const keyColor = keyMappings[key];
-
     const selectedTextColor = getSelectedColor("text_color");
     updateTextPicker(textPickerElem, textPickerInput, selectedTextColor);
+
     const selectedBgColor = getSelectedColor("bg_color");
     updateBgPicker(bgPickerElem, bgPickerInput, selectedBgColor);
   };
