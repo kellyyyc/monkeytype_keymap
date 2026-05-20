@@ -71,14 +71,7 @@ window.addEventListener("load", () => {
       fillMissingKeyMappings();
       renderKeyboard();
 
-      if (isExtensionEnabled) {
-        toggleOnElem.classList.add("active-btn");
-        keyboardElem.classList.remove("disabled");
-      } else {
-        toggleOffElem.classList.add("active-btn");
-        keyboardElem.classList.add("disabled");
-      }
-
+      updateExtensionToggle(keyboardElem, toggleOnElem, toggleOffElem);
       toggleOnElem.addEventListener("click", () => {
         isExtensionEnabled = true;
         toggleOffElem.classList.remove("active-btn");
@@ -234,6 +227,18 @@ const fillMissingKeyMappings = () => {
     if (!keyMappings[key]) {
       keyMappings[key] = getDefaultKeyMapping();
     }
+  }
+};
+
+const updateExtensionToggle = (keyboardElem, toggleOnElem, toggleOffElem) => {
+  if (isExtensionEnabled) {
+    toggleOnElem.classList.add("active-btn");
+    toggleOffElem.classList.remove("active-btn");
+    keyboardElem.classList.remove("disabled");
+  } else {
+    toggleOffElem.classList.add("active-btn");
+    toggleOnElem.classList.remove("active-btn");
+    keyboardElem.classList.add("disabled");
   }
 };
 
