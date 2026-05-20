@@ -173,26 +173,6 @@ window.addEventListener("load", () => {
     renderKeyboard();
     refreshColorPickers();
   });
-
-  const selectAllKeys = () => {
-    for (const key in selected) {
-      selected[key] = true;
-    }
-
-    for (const elem of document.getElementsByClassName("key")) {
-      elem.style.borderColor = colors.mainColor;
-    }
-  };
-
-  const deselectAllKeys = () => {
-    for (const key in selected) {
-      selected[key] = false;
-    }
-
-    for (const elem of document.getElementsByClassName("key")) {
-      elem.style.borderColor = colors.backgroundColor;
-    }
-  };
 });
 
 const setupPageLinks = () => {
@@ -238,6 +218,32 @@ const updateSelectedKeysColor = (colorType, color) => {
     if (isSelected) {
       keyMappings[key][colorType] = color;
     }
+  }
+};
+
+const selectAllKeys = () => {
+  for (const key in selected) {
+    selected[key] = true;
+  }
+
+  updateKeySelectionBorders();
+};
+
+const deselectAllKeys = () => {
+  for (const key in selected) {
+    selected[key] = false;
+  }
+
+  updateKeySelectionBorders();
+};
+
+const updateKeySelectionBorders = () => {
+  for (const keyElem of document.getElementsByClassName("key")) {
+    const key = keyElem.dataset.key;
+
+    keyElem.style.borderColor = selected[key]
+      ? colors.mainColor
+      : colors.backgroundColor;
   }
 };
 
