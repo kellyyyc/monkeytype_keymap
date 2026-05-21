@@ -11,7 +11,7 @@ The extension also includes layout options and a rainbow preset that helps users
 ## Features
 
 - Customise the text and background colors of individual keyboard keys
-- Select multiple keys at once
+- Select and edit multiple keys at once
 - Apply a rainbow preset for touch-typing practice
 - Choose between QWERTY, Dvorak, and Colemak keyboard layouts
 - Enable an Angle Mod layout for the rainbow preset
