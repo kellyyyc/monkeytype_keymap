@@ -3,6 +3,8 @@ const { DARK_GRAY, WHITE } = globalThis.KEYMAP_CONSTANTS;
 const FRAME_DELAY = 5;
 const MAX_RGB_VALUE = 0xff;
 const WHITE_TOLERANCE = 0x33;
+const KEYMAP_SELECTOR = '[data-ui-element="keymap"]';
+const KEY_SELECTOR = '[style*="--keybgcolor"]';
 
 let keyColors = null;
 
@@ -20,11 +22,11 @@ chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
 });
 
 const startObserver = () => {
-  const keymapElem = document.getElementById("keymap");
+  const keymapElem = document.querySelector(KEYMAP_SELECTOR);
   if (!keymapElem) {
     return false;
   }
-  const keys = keymapElem.getElementsByClassName("keymapKey");
+  const keys = keymapElem.querySelectorAll(KEY_SELECTOR);
   if (keys.length === 0) {
     return false;
   }
@@ -33,23 +35,9 @@ const startObserver = () => {
     attributes: true,
     attributeFilter: ["easing", "style", "class"],
   });
-
-  const typingTestElem = document.getElementById("typingTest");
-  if (!typingTestElem) {
-    return false;
-  }
-  testObserver.observe(typingTestElem, {
-    attributes: true,
-    attributeFilter: ["class"],
-  });
-
-  const pageTestElem = document.getElementsByClassName("pageTest")[0];
-  if (!pageTestElem) {
-    return false;
-  }
-  testObserver.observe(pageTestElem, {
-    attributes: true,
-    attributeFilter: ["class"],
+  testObserver.observe(keymapElem, {
+    subtree: true,
+    childList: true,
   });
 
   for (const key of keys) {
@@ -64,7 +52,7 @@ const keyboardObserver = new MutationObserver((mutations) => {
 
   for (const mutation of mutations) {
     const elem = mutation.target;
-    if (!elem.classList.contains("keymapKey")) {
+    if (!elem.matches(KEY_SELECTOR)) {
       continue;
     }
 
@@ -78,12 +66,12 @@ const keyboardObserver = new MutationObserver((mutations) => {
 });
 
 const testObserver = new MutationObserver((mutations) => {
-  const keymapElem = document.getElementById("keymap");
+  const keymapElem = document.querySelector(KEYMAP_SELECTOR);
   if (!keymapElem) {
     return;
   }
 
-  const keys = keymapElem.getElementsByClassName("keymapKey");
+  const keys = keymapElem.querySelectorAll(KEY_SELECTOR);
   if (keys.length === 0) {
     return;
   }
@@ -109,13 +97,13 @@ const isNearWhite = (rgb_str) => {
 const changeKeyColor = (key, delay) => {
   let letter = null;
 
-  const dataKey = key.getAttribute("data-key");
-  if (dataKey) {
-    letter = dataKey.slice(0, 1);
-  } else if (
-    key.classList.contains("keySpace") &&
-    key.classList.contains("left")
-  ) {
+  const textNode = [...key.childNodes].find(
+    (node) => node.nodeType === Node.TEXT_NODE && node.textContent.trim(),
+  );
+  if (textNode) {
+    letter = textNode.textContent.trim().toLowerCase();
+  } else if (key.querySelector(":scope > button")) {
+    // The spacebar contains a button showing the current layout name.
     letter = "spacebar";
   } else {
     return;
@@ -129,20 +117,22 @@ const changeKeyColor = (key, delay) => {
     return;
   }
 
+  const keyTextElem = key.querySelector(":scope > button") ?? key;
+
   if (key.classList.contains("activeKey")) {
     if (isNearWhite(color.bg_color)) {
       key.style.backgroundColor = DARK_GRAY;
-      key.style.color = WHITE;
+      keyTextElem.style.color = WHITE;
     } else {
       key.style.backgroundColor = WHITE;
-      key.style.color = DARK_GRAY;
+      keyTextElem.style.color = DARK_GRAY;
     }
 
     return;
   }
 
-  if (key.style.color !== color.text_color) {
-    key.style.color = color.text_color;
+  if (keyTextElem.style.color !== color.text_color) {
+    keyTextElem.style.color = color.text_color;
   }
 
   const keyStyleDelay = (numFrames) => {
