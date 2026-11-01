@@ -7,7 +7,7 @@ const KEYMAP_SELECTOR = '[data-ui-element="keymap"]';
 const KEY_SELECTOR = '[style*="--keybgcolor"]';
 
 let keyColors = null;
-const activeKeys = new WeakSet();
+const siteColoredKeys = new WeakSet();
 
 chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
   const isEnabled = result["keymap_enabled"];
@@ -95,6 +95,14 @@ const isNearWhite = (rgb_str) => {
   return isLight;
 };
 
+const getKeymapMode = () => {
+  try {
+    return JSON.parse(localStorage.getItem("config"))?.keymapMode ?? null;
+  } catch {
+    return null;
+  }
+};
+
 const getMonkeytypeColors = (key) => {
   const backgroundColor = key.style.getPropertyValue("--keybgcolor").trim();
   const textColor = key.style.getPropertyValue("--keycolor").trim();
@@ -102,7 +110,7 @@ const getMonkeytypeColors = (key) => {
   return `${backgroundColor}|${textColor}`;
 };
 
-const isActiveKey = (key) => {
+const hasDifferentMonkeytypeColors = (key) => {
   const keymapElem = document.querySelector(KEYMAP_SELECTOR);
   if (!keymapElem) {
     return false;
@@ -150,21 +158,26 @@ const changeKeyColor = (key, delay) => {
 
   const keyTextElem = key.querySelector(":scope > button") ?? key;
 
-  if (isActiveKey(key)) {
-    activeKeys.add(key);
+  if (hasDifferentMonkeytypeColors(key)) {
+    siteColoredKeys.add(key);
 
-    if (isNearWhite(color.bg_color)) {
-      key.style.backgroundColor = DARK_GRAY;
-      keyTextElem.style.color = WHITE;
+    if (getKeymapMode() === "next") {
+      if (isNearWhite(color.bg_color)) {
+        key.style.backgroundColor = DARK_GRAY;
+        keyTextElem.style.color = WHITE;
+      } else {
+        key.style.backgroundColor = WHITE;
+        keyTextElem.style.color = DARK_GRAY;
+      }
     } else {
-      key.style.backgroundColor = WHITE;
-      keyTextElem.style.color = DARK_GRAY;
+      key.style.backgroundColor = "var(--keybgcolor)";
+      keyTextElem.style.color = "var(--keycolor)";
     }
 
     return;
   }
 
-  const wasActive = activeKeys.delete(key);
+  const wasSiteColored = siteColoredKeys.delete(key);
 
   if (keyTextElem.style.color !== color.text_color) {
     keyTextElem.style.color = color.text_color;
@@ -182,5 +195,5 @@ const changeKeyColor = (key, delay) => {
     requestAnimationFrame(() => keyStyleDelay(numFrames - 1));
   };
 
-  keyStyleDelay(wasActive ? 0 : delay);
+  keyStyleDelay(wasSiteColored ? 0 : delay);
 };
