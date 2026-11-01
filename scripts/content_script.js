@@ -7,6 +7,7 @@ const KEYMAP_SELECTOR = '[data-ui-element="keymap"]';
 const KEY_SELECTOR = '[style*="--keybgcolor"]';
 
 let keyColors = null;
+const activeKeys = new WeakSet();
 
 chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
   const isEnabled = result["keymap_enabled"];
@@ -33,7 +34,7 @@ const startObserver = () => {
   keyboardObserver.observe(keymapElem, {
     subtree: true,
     attributes: true,
-    attributeFilter: ["easing", "style", "class"],
+    attributeFilter: ["style"],
   });
   testObserver.observe(keymapElem, {
     subtree: true,
@@ -65,7 +66,7 @@ const keyboardObserver = new MutationObserver((mutations) => {
   }
 });
 
-const testObserver = new MutationObserver((mutations) => {
+const testObserver = new MutationObserver(() => {
   const keymapElem = document.querySelector(KEYMAP_SELECTOR);
   if (!keymapElem) {
     return;
@@ -94,6 +95,39 @@ const isNearWhite = (rgb_str) => {
   return isLight;
 };
 
+const getMonkeytypeColors = (key) => {
+  const backgroundColor = key.style.getPropertyValue("--keybgcolor").trim();
+  const textColor = key.style.getPropertyValue("--keycolor").trim();
+
+  return `${backgroundColor}|${textColor}`;
+};
+
+const isActiveKey = (key) => {
+  const keymapElem = document.querySelector(KEYMAP_SELECTOR);
+  if (!keymapElem) {
+    return false;
+  }
+
+  const colorCounts = new Map();
+
+  for (const keyElem of keymapElem.querySelectorAll(KEY_SELECTOR)) {
+    const colors = getMonkeytypeColors(keyElem);
+    colorCounts.set(colors, (colorCounts.get(colors) ?? 0) + 1);
+  }
+
+  let defaultColors = null;
+  let highestCount = 0;
+
+  for (const [colors, count] of colorCounts) {
+    if (count > highestCount) {
+      defaultColors = colors;
+      highestCount = count;
+    }
+  }
+
+  return colorCounts.size > 1 && getMonkeytypeColors(key) !== defaultColors;
+};
+
 const changeKeyColor = (key, delay) => {
   let letter = null;
 
@@ -108,9 +142,6 @@ const changeKeyColor = (key, delay) => {
   } else {
     return;
   }
-  if (!letter) {
-    return;
-  }
 
   const color = keyColors?.[letter];
   if (!color) {
@@ -119,7 +150,9 @@ const changeKeyColor = (key, delay) => {
 
   const keyTextElem = key.querySelector(":scope > button") ?? key;
 
-  if (key.classList.contains("activeKey")) {
+  if (isActiveKey(key)) {
+    activeKeys.add(key);
+
     if (isNearWhite(color.bg_color)) {
       key.style.backgroundColor = DARK_GRAY;
       keyTextElem.style.color = WHITE;
@@ -130,6 +163,8 @@ const changeKeyColor = (key, delay) => {
 
     return;
   }
+
+  const wasActive = activeKeys.delete(key);
 
   if (keyTextElem.style.color !== color.text_color) {
     keyTextElem.style.color = color.text_color;
@@ -147,5 +182,5 @@ const changeKeyColor = (key, delay) => {
     requestAnimationFrame(() => keyStyleDelay(numFrames - 1));
   };
 
-  keyStyleDelay(delay);
+  keyStyleDelay(wasActive ? 0 : delay);
 };

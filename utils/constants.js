@@ -80,6 +80,7 @@
       KEYBOARD_LAYOUTS,
       ALL_KEYS,
       BLACK,
+      DARK_GRAY,
       WHITE,
       DEFAULT_TEXT_COLOR,
       DEFAULT_BG_COLOR,
