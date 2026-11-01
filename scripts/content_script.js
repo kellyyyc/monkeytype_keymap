@@ -7,7 +7,7 @@ const KEYMAP_SELECTOR = '[data-ui-element="keymap"]';
 const KEY_SELECTOR = '[style*="--keybgcolor"]';
 
 let keyColors = null;
-const siteColoredKeys = new WeakSet();
+const highlightedKeys = new WeakSet();
 
 chrome.storage.sync.get(["keymap_enabled", "keymap_keys"]).then((result) => {
   const isEnabled = result["keymap_enabled"];
@@ -110,7 +110,7 @@ const getMonkeytypeColors = (key) => {
   return `${backgroundColor}|${textColor}`;
 };
 
-const hasDifferentMonkeytypeColors = (key) => {
+const isHighlighted = (key) => {
   const keymapElem = document.querySelector(KEYMAP_SELECTOR);
   if (!keymapElem) {
     return false;
@@ -158,8 +158,8 @@ const changeKeyColor = (key, delay) => {
 
   const keyTextElem = key.querySelector(":scope > button") ?? key;
 
-  if (hasDifferentMonkeytypeColors(key)) {
-    siteColoredKeys.add(key);
+  if (isHighlighted(key)) {
+    highlightedKeys.add(key);
 
     if (getKeymapMode() === "next") {
       if (isNearWhite(color.bg_color)) {
@@ -177,7 +177,7 @@ const changeKeyColor = (key, delay) => {
     return;
   }
 
-  const wasSiteColored = siteColoredKeys.delete(key);
+  const wasHighlighted = highlightedKeys.delete(key);
 
   if (keyTextElem.style.color !== color.text_color) {
     keyTextElem.style.color = color.text_color;
@@ -195,5 +195,5 @@ const changeKeyColor = (key, delay) => {
     requestAnimationFrame(() => keyStyleDelay(numFrames - 1));
   };
 
-  keyStyleDelay(wasSiteColored ? 0 : delay);
+  keyStyleDelay(wasHighlighted ? 0 : delay);
 };
